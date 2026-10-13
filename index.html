@@ -190,7 +190,7 @@ body.phase-night .notes-card { display:block !important; }
 const SUPABASE_URL="https://wajaawmpkbqsfxffojfu.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_1YPTK7Ehsm7fPfcsAJ-lAg_Aoc5SbBS";
 const $=id=>document.getElementById(id);
-let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, nominations=[], secretRoleData=null, currentPhase="day";
+let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, councilAlertTimer=null, nominations=[], secretRoleData=null, currentPhase="day";
 function msg(id,text,kind=""){const el=$(id);el.textContent=text;el.className="notice"+(kind?" "+kind:"");el.classList.remove("hidden")}
 function clearMsg(id){$(id).classList.add("hidden")}
 function view(id){["home","lobby"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id!=="lobby")$("roleReveal").classList.add("hidden")}
@@ -247,16 +247,21 @@ async function refreshGameState(organizer){
  const stamp=room.council_updated_at||null;
  const alertBox=$("councilAlert");
  if(phase==="council"){
-   if(alertBox) alertBox.classList.remove("hidden");
+   // Afficher l'alerte uniquement lors d'un nouvel appel au conseil, puis la retirer après 2 secondes.
    if(stamp&&stamp!==seenCouncilAt){
      seenCouncilAt=stamp;
+     if(alertBox){
+       alertBox.classList.remove("hidden");
+       if(councilAlertTimer)clearTimeout(councilAlertTimer);
+       councilAlertTimer=setTimeout(()=>{alertBox.classList.add("hidden");councilAlertTimer=null;},2000);
+     }
      if(!organizer){
        try{if(typeof navigator!="undefined"&&typeof navigator.vibrate==="function")navigator.vibrate([250,120,250,120,400]);}catch(_){ }
-       // L'alerte reste visible tant que le conseil est ouvert, même si le joueur revient sur l'écran.
      }
    }
  } else {
    if(alertBox)alertBox.classList.add("hidden");
+   if(councilAlertTimer){clearTimeout(councilAlertTimer);councilAlertTimer=null;}
    if(stamp)seenCouncilAt=stamp;
  }
  renderVillageTable();
