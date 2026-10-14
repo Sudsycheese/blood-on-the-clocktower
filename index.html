@@ -428,8 +428,8 @@ async function refreshLobby(){
  const organizer=room.owner_id===user.id;
  renderPlayerLobbyScene();
  const gameStarted=room.status==="started";
- // Une fois la partie lancée, on retire l'écran de salon (code, liste et panneau d'attente)
- // pour laisser la table et les commandes utiles occuper l'écran.
+ // Une fois la partie lancée, retirer tous les éléments de salon pour laisser la table et les commandes de partie.
+ $("playerLobbyScene").classList.toggle("hidden",gameStarted||organizer);
  $("lobbyInfoCard").classList.toggle("hidden",gameStarted||!organizer);
  $("lobbyRosterCard").classList.toggle("hidden",gameStarted||!organizer);
  $("organizerPanel").classList.toggle("hidden",!organizer||gameStarted);
@@ -448,6 +448,7 @@ async function refreshLobby(){
   }
 }
  await refreshGameState(organizer);
+ if(!organizer&&room.status==="started")applyPlayerGameOnlyView();
  }finally{lobbyRefreshBusy=false}
 }
 async function renderOrganizerRoleSummary(){
@@ -715,10 +716,6 @@ function renderPlayerLobbyScene(){
  const organizer=!!(room&&user&&room.owner_id===user.id);
  const show=!!room&&room.status!=="started"&&!organizer;
  scene.classList.toggle("hidden",!show);
- if(room&&room.status==="started"&&!organizer){
-  $("lobbyInfoCard")?.classList.add("hidden");
-  $("lobbyRosterCard")?.classList.add("hidden");
- }
  if(!show)return;
  $("sceneRoomTitle").textContent=room.title||"Salle d’attente";
  $("sceneRoomCode").textContent=room.code||"———";
@@ -833,14 +830,23 @@ async function renderPlayerRole(){
 $("backToLobbyBtn").onclick=()=>{
  roleRevealDismissed=true;
  $("roleReveal").classList.add("hidden");
- view("lobby");
- if(room&&room.status==="started"&&mode==="player"){
-  document.body.classList.add("player-started-view");
-  $("playerLobbyScene")?.classList.add("hidden");
-  $("lobbyInfoCard")?.classList.add("hidden");
-  $("lobbyRosterCard")?.classList.add("hidden");
-  $("waitText") && ($("waitText").textContent="La partie est lancée.");
+ $("home").classList.add("hidden");
+ $("lobby").classList.remove("hidden");
+ if(room?.status==="started"&&mode==="player"){
+  applyPlayerGameOnlyView();
+  refreshGameState(false).catch(e=>console.warn("Actualisation de la partie :",e));
+  return;
  }
+ const organizer=!!(room&&user&&room.owner_id===user.id);
+ $("lobbyInfoCard").classList.toggle("hidden",!organizer);
+ $("lobbyRosterCard").classList.toggle("hidden",!organizer);
+ $("playerLobbyScene").classList.toggle("hidden",organizer);
+ $("organizerPanel").classList.toggle("hidden",!organizer);
+ $("playerPanel").classList.toggle("hidden",organizer);
+ $("gameControlPanel").classList.add("hidden");
+ $("playerGamePanel").classList.add("hidden");
+ $("playerRolePanel").classList.add("hidden");
+ document.body.classList.remove("player-started-view");
 };
 $("organizerBtn").onclick=()=>{$("organizerLogin").classList.toggle("hidden");clearMsg("homeMsg")};
 $("cancelCreate").onclick=()=>$("organizerLogin").classList.add("hidden");
@@ -867,12 +873,33 @@ $("clearRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sé
 $("launchBtn").onclick=async()=>{if(!room)return;if(!confirm("Lancer la partie ? Les joueurs pourront voir leur propre rôle."))return;try{const {error}=await sb.rpc("start_room",{p_room_id:room.id});if(error)throw error;lastObservedRoomStatus=null;await refreshLobby();msg("lobbyMsg","Partie lancée ! Chaque joueur reçoit le rôle qui lui a été attribué, avec sa description.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
 function clearSavedRoom(){try{localStorage.removeItem("botc_room_id");localStorage.removeItem("botc_mode")}catch(e){console.warn("Impossible d’effacer la session locale",e)}}
 function returnHome(message=""){clearInterval(refreshTimer);refreshTimer=null;room=null;players=[];selectedPlayer=null;mode=null;lastObservedRoomStatus=null;clearSavedRoom();document.body.classList.remove("player-started-view");view("home");$("organizerLogin").classList.add("hidden");["lobbyMsg","createMsg"].forEach(clearMsg);if(message)msg("homeMsg",message,"success")}
+function applyPlayerGameOnlyView(){
+ if(!room||room.status!=="started"||mode!=="player")return;
+ document.body.classList.add("player-started-view");
+ ["lobbyInfoCard","lobbyRosterCard","playerLobbyScene","organizerPanel","playerPanel","gameControlPanel"].forEach(id=>{const el=$(id);if(el){el.classList.add("hidden");el.style.display="none"}});
+ ["playerGamePanel","playerRolePanel"].forEach(id=>{const el=$(id);if(el){el.classList.remove("hidden");el.style.display="block"}});
+ $("home").classList.add("hidden");
+ $("lobby").classList.remove("hidden");
+}
 async function closeCurrentRoom(){if(!room||!confirm("Fermer définitivement ce salon ? Tous les joueurs seront renvoyés à l’accueil."))return;try{const {error}=await sb.rpc("close_room",{p_room_id:room.id});if(error)throw error;returnHome("Salon fermé. Tu peux maintenant créer ou rejoindre une nouvelle partie.")}catch(e){msg("gameMsg",friendly(e),"error");msg("lobbyMsg",friendly(e),"error")}}
 $("endBtn").onclick=closeCurrentRoom;
 $("endGameRoomBtn").onclick=closeCurrentRoom;
 $("copyCode").onclick=async()=>{try{await navigator.clipboard.writeText(room.code);msg("lobbyMsg","Code copié : "+room.code,"success")}catch{msg("lobbyMsg","Code du salon : "+room.code)}};
 $("refresh").onclick=async()=>{try{await refreshLobby();msg("lobbyMsg","Salon actualisé.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
-$("leaveBtn").onclick=()=>returnHome("Tu as quitté cet écran. Tu peux rejoindre une partie avec son code.");
+async function leaveRoomAsPlayer(){
+ if(!room||!user){returnHome("Tu as quitté le salon.");return}
+ const currentRoomId=room.id;
+ try{
+  const {error}=await sb.from("players").delete().eq("room_id",currentRoomId).eq("user_id",user.id);
+  if(error)throw error;
+  returnHome("Tu as quitté le salon. Tu peux rejoindre une autre partie avec son code.");
+ }catch(e){
+  console.warn("Suppression du joueur impossible :",e);
+  returnHome("Tu as quitté cet écran. Attention : Supabase n’a pas permis de retirer ton joueur du salon ("+friendly(e)+").");
+ }
+}
+$("leaveBtn").onclick=leaveRoomAsPlayer;
+$("sceneLeaveBtn").onclick=leaveRoomAsPlayer;
 $("callCouncilBtn").onclick=callCouncil;
 $("endCouncilBtn").onclick=endCouncil;
 $("nightBtn").onclick=()=>setGamePhase("night");
@@ -951,7 +978,32 @@ body.player-started-view #playerRolePanel>p{margin-bottom:10px;}
 body.player-started-view #playerRolePanel .actions{display:none!important;}
 body.player-started-view #playerSecretCard{display:block!important;}
 body.player-started-view #playerSecretRoleDesc.hidden{display:none!important;}
+/* Une fois la partie lancée, masquer complètement les cartes du lobby.
+   La table, la fiche du rôle et les commandes de partie restent visibles. */
+body.player-started-view #lobbyInfoCard,
+body.player-started-view #lobbyRosterCard,
+body.player-started-view #playerLobbyScene{
+ display:none!important;
+}
+body.organizer-view #lobbyInfoCard,
+body.organizer-view #lobbyRosterCard,
+body.organizer-view #playerLobbyScene{
+ display:none!important;
+}
 
 </style>
 
+
+<style>
+body.player-started-view > main > header.brand{display:none!important;}
+body.player-started-view #lobbyInfoCard,
+body.player-started-view #lobbyRosterCard,
+body.player-started-view #playerLobbyScene,
+body.player-started-view #organizerPanel,
+body.player-started-view #playerPanel,
+body.player-started-view #gameControlPanel{display:none!important;}
+body.player-started-view #playerGamePanel,
+body.player-started-view #playerRolePanel{display:block!important;}
+body.player-started-view #lobby{display:flex!important;flex-direction:column!important;gap:12px!important;}
+</style>
 </body></html>
