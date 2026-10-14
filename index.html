@@ -715,6 +715,10 @@ function renderPlayerLobbyScene(){
  const organizer=!!(room&&user&&room.owner_id===user.id);
  const show=!!room&&room.status!=="started"&&!organizer;
  scene.classList.toggle("hidden",!show);
+ if(room&&room.status==="started"&&!organizer){
+  $("lobbyInfoCard")?.classList.add("hidden");
+  $("lobbyRosterCard")?.classList.add("hidden");
+ }
  if(!show)return;
  $("sceneRoomTitle").textContent=room.title||"Salle d’attente";
  $("sceneRoomCode").textContent=room.code||"———";
@@ -826,7 +830,18 @@ async function renderPlayerRole(){
   document.body.classList.add("player-started-view");
  } else {msg("lobbyMsg","L'organisateur n'a pas attribué de rôle à ton profil. Contacte-le.","error")}
 }
-$("backToLobbyBtn").onclick=()=>{roleRevealDismissed=true;$("roleReveal").classList.add("hidden");view("lobby")};
+$("backToLobbyBtn").onclick=()=>{
+ roleRevealDismissed=true;
+ $("roleReveal").classList.add("hidden");
+ view("lobby");
+ if(room&&room.status==="started"&&mode==="player"){
+  document.body.classList.add("player-started-view");
+  $("playerLobbyScene")?.classList.add("hidden");
+  $("lobbyInfoCard")?.classList.add("hidden");
+  $("lobbyRosterCard")?.classList.add("hidden");
+  $("waitText") && ($("waitText").textContent="La partie est lancée.");
+ }
+};
 $("organizerBtn").onclick=()=>{$("organizerLogin").classList.toggle("hidden");clearMsg("homeMsg")};
 $("cancelCreate").onclick=()=>$("organizerLogin").classList.add("hidden");
 $("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;lastObservedRoomStatus=room.status;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
