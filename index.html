@@ -244,14 +244,14 @@ body.phase-night .notes-card { display:block !important; }
 @media(max-width:650px){.player-lobby-list-card{padding:14px}.player-lobby-list-heading h2{font-size:20px}.player-lobby-person{padding:9px 10px}}
 
 
-body.player-lobby-waiting{overflow:hidden!important}
+body.player-lobby-waiting{overflow-y:auto!important;overflow-x:hidden!important}
 body.player-lobby-waiting #personalSecret,
 body.player-lobby-waiting .personal-secret,
 body.player-lobby-waiting .secret-role-card,
 body.player-lobby-waiting [data-panel="personal-secret"]{display:none!important}
-body.player-lobby-waiting .player-lobby-scene{min-height:calc(100dvh - 24px)!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
-body.player-lobby-waiting .player-lobby-scene .scene-stage{flex:1 1 auto!important}
-body.player-lobby-waiting .player-lobby-scene .player-lobby-list-card{max-height:calc(100dvh - 170px);overflow:auto}
+body.player-lobby-waiting .player-lobby-scene{min-height:0!important;height:auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
+body.player-lobby-waiting .player-lobby-scene .scene-stage{flex:0 0 auto!important}
+body.player-lobby-waiting .player-lobby-scene .player-lobby-list-card{max-height:none!important;overflow:visible!important}
 
 
 body.player-lobby-waiting .role-card,
@@ -259,6 +259,7 @@ body.player-lobby-waiting .my-role,
 body.player-lobby-waiting #rolePanel,
 body.player-lobby-waiting #playerSecretCard{display:none!important}
 
+body.player-lobby-waiting,body.player-lobby-waiting #app{min-height:100%;height:auto!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}
 </style>
 </head><body><main>
 <header class="brand"><div class="logo">☾</div><div><div class="eyebrow">Une nuit · Un village · Des secrets</div><h1>Blood on the Cl<span class="clock-letter" aria-label="o"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 6v6l4 2"></path></svg></span>cktower</h1></div></header>
@@ -429,6 +430,7 @@ function showEliminationAnimation(title="Tu es éliminé !",caption="Ton aventur
 }
 $("dismissElimination").onclick=()=>{$("eliminationOverlay").classList.add("hidden");if(eliminationOverlayTimer)clearTimeout(eliminationOverlayTimer)};
 let lastSuccessionNoticeRoom=null;
+let dismissedGameAnnouncementRoom=null;
 async function refreshDemonNightUI(organizer,phase){
  const panel=$("demonNightAction");if(!panel)return;
  const me=players.find(p=>p.user_id===user?.id);
@@ -484,7 +486,10 @@ async function refreshOrganizerDemonAction(){
  }catch(e){box.classList.remove("hidden");box.textContent="Action nocturne indisponible : "+friendly(e)}
 }
 $("submitDemonTarget").addEventListener("click",submitDemonNightTarget);
-$("dismissGameAnnouncement").addEventListener("click",()=>$("gameAnnouncementOverlay").classList.add("hidden"));
+$("dismissGameAnnouncement").addEventListener("click",()=>{
+ dismissedGameAnnouncementRoom=room?.id||null;
+ $("gameAnnouncementOverlay").classList.add("hidden");
+});
 $("dismissSuccession").addEventListener("click",()=>$("successionOverlay").classList.add("hidden"));
 async function refreshGameState(organizer){
  if(!room||room.status!=="started")return;
@@ -513,7 +518,10 @@ async function refreshGameState(organizer){
   const overlay=$("gameAnnouncementOverlay");
   $("gameAnnouncementTitle").textContent=winner.toLocaleLowerCase("fr").includes("gentil")||winner.toLocaleLowerCase("fr").includes("citadin")?"Les Citadins ont gagné !":"Le camp démon a gagné !";
   $("gameAnnouncementText").textContent="La partie est terminée.";
-  overlay.classList.remove("hidden");
+  if(dismissedGameAnnouncementRoom!==room.id)overlay.classList.remove("hidden");
+ }else{
+  dismissedGameAnnouncementRoom=null;
+  $("gameAnnouncementOverlay")?.classList.add("hidden");
  }
  // Certains anciens décors n'ont plus de texte central : ne jamais planter si l'élément manque.
  safeText("tableCenterPhase",(phaseNames[phase]||"Jour").toUpperCase());
