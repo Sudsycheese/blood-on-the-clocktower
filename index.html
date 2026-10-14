@@ -178,6 +178,32 @@ body.phase-night .notes-card { display:block !important; }
 @keyframes head-pop{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(58px,23px) rotate(150deg);opacity:1}}
 @media(prefers-reduced-motion:reduce){.elimination-overlay *{animation:none!important}}
 
+
+/* Lobby visuel joueur : scène de table dynamique, l'organisateur garde son interface habituelle */
+.player-lobby-scene{grid-column:1/-1;position:relative;min-height:calc(100vh - 170px);margin:0;overflow:hidden;border:1px solid #61442d;border-radius:18px;background:radial-gradient(ellipse at 50% 50%,#28212a 0%,#121117 58%,#08090d 100%);box-shadow:0 18px 55px #0009;color:#f7e8ce}
+.player-lobby-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;background:linear-gradient(180deg,#0a0b10f5,#101016e8);border-bottom:1px solid #6c4b31;flex-wrap:wrap}
+.brand-lockup{display:flex;align-items:center;gap:12px}.brand-mark{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1px solid #b78a54;color:#eac68c;font-size:28px;background:radial-gradient(circle,#38242a,#101016)}.brand-title{font:700 clamp(18px,2.3vw,29px) Georgia,serif;color:#f1d3a0}.brand-subtitle{font:14px Georgia,serif;color:#b9a38d}
+.lobby-count,.lobby-code{padding:9px 16px;border:1px solid #4f3b32;border-radius:12px;background:#0d0d13d9;text-align:center}.lobby-count span,.lobby-code span{display:block;color:#bba88e;font-size:12px}.lobby-count strong,.lobby-code strong{display:block;color:#f3d9a8;font:700 18px Georgia,serif;margin-top:3px}
+.scene-stage{position:relative;min-height:470px;height:min(66vh,720px);display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#5c351f26,#090a0f00 62%),linear-gradient(180deg,#10101755,#09090eaa)}
+.scene-ambient{position:absolute;inset:0;background:radial-gradient(ellipse at 8% 45%,#a75e251e,transparent 28%),radial-gradient(ellipse at 92% 45%,#a75e251e,transparent 28%),repeating-linear-gradient(0deg,#ffffff03 0 1px,transparent 1px 70px);pointer-events:none}
+.scene-table{position:relative;width:min(58vw,610px);min-width:310px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 45%,#72452a 0%,#4b2b1e 48%,#281a19 68%,#171319 70%,#100e13 73%);border:9px double #946640;box-shadow:0 0 0 8px #2b1c1b,0 0 0 10px #8d5e36,0 24px 60px #000b,inset 0 0 35px #09070a}
+.scene-table:before{content:"";position:absolute;inset:7%;border-radius:50%;border:2px solid #c0935b77;box-shadow:inset 0 0 0 12px #21151244,inset 0 0 0 14px #c0935b30}
+.scene-table-ring{position:absolute;inset:17%;border-radius:50%;border:1px solid #d5a56966;box-shadow:0 0 0 1px #140e0b,inset 0 0 40px #170f13}
+.scene-table-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;background:radial-gradient(circle,#4d3030,#241a20 72%);border:2px solid #bb8b51;box-shadow:0 0 0 8px #9a6b3925,0 0 40px #0009;padding:10px}
+.scene-table-center span{font-size:clamp(35px,5vw,62px);color:#d9a75d;text-shadow:0 0 18px #e9a04b55}.scene-table-center strong{font:700 clamp(8px,1.1vw,13px) Georgia,serif;letter-spacing:.12em;color:#f1d3a0}.scene-table-center small{font-size:9px;letter-spacing:.15em;color:#bda181}
+.scene-chairs{position:absolute;inset:0}.scene-seat{position:absolute;transform:translate(-50%,-50%);width:clamp(58px,7.4vw,94px);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2}
+.scene-chair{width:70%;aspect-ratio:.8;border-radius:12px 12px 18px 18px;border:2px solid #a77847;background:linear-gradient(135deg,#6b2c2d,#35171d 68%,#1a1016);box-shadow:inset 0 0 0 3px #160e12,0 8px 13px #0009;position:relative}
+.scene-chair:before{content:"";position:absolute;left:9%;right:9%;top:7%;bottom:7%;border:1px solid #d2a15e66;border-radius:8px}.scene-chair:after{content:"✦";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(12px,1.7vw,20px);color:#c58a4d88}
+.scene-seat-name{max-width:140%;padding:5px 9px;border:1px solid #8b6b99;border-radius:9px;background:#0c0b13ee;color:#fff0d2;font:700 clamp(10px,1.15vw,14px) Georgia,serif;text-align:center;white-space:nowrap;box-shadow:0 3px 12px #0009}
+.scene-seat-number{display:inline-grid;place-items:center;min-width:18px;height:18px;margin-right:5px;border:1px solid #51425d;border-radius:5px;color:#e7c98f;font:700 10px system-ui,sans-serif}
+.scene-seat.me .scene-seat-name{border-color:#e7c58b;box-shadow:0 0 13px #e7c58b44}.scene-seat.ready .scene-seat-name:after{content:" ✓";color:#8ce2bd}.scene-seat.dead .scene-chair{filter:grayscale(.9);opacity:.45}.scene-seat.dead .scene-seat-name{text-decoration:line-through;opacity:.65}
+.player-lobby-bottom{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 22px;background:linear-gradient(180deg,#101016e8,#090a0ff5);border-top:1px solid #65472f;flex-wrap:wrap}
+.scene-status{display:flex;align-items:center;gap:10px}.status-dot{width:10px;height:10px;border-radius:50%;background:#76d5a5;box-shadow:0 0 12px #76d5a566}.scene-status strong,.scene-status small{display:block}.scene-status strong{color:#f0d7ab}.scene-status small{font-size:12px;color:#ad9b89;margin-top:3px}
+.scene-ready-btn{border:1px solid #d7a65f;border-radius:12px;padding:13px 24px;background:linear-gradient(135deg,#e4c58c,#ad7744);color:#21151a;font-weight:800;box-shadow:0 0 24px #d5a25a33}.scene-ready-btn.is-ready{background:linear-gradient(135deg,#8fe2bd,#3a8e75);border-color:#a8f0d2}
+.scene-leave-btn{background:#21171b;border:1px solid #71434a;color:#f2b8b5;border-radius:10px;padding:10px 14px}
+.scene-footnote{text-align:center;color:#a8947e;font-size:12px;padding:0 12px 13px;margin:0}
+@media(max-width:700px){.player-lobby-scene{min-height:calc(100vh - 130px)}.player-lobby-top{padding:13px;gap:10px}.brand-lockup{width:100%}.lobby-count,.lobby-code{flex:1;min-width:0}.scene-stage{height:56vh;min-height:390px}.scene-table{width:min(76vw,470px);min-width:270px}.scene-seat{width:clamp(48px,12vw,72px)}.scene-seat-name{padding:4px 5px;font-size:clamp(8px,2.5vw,11px)}.scene-chair{width:68%;border-radius:8px 8px 13px 13px}.scene-seat-number{min-width:15px;height:15px;font-size:8px;margin-right:2px}.player-lobby-bottom{padding:12px;gap:9px}.scene-ready-btn{padding:11px 13px}.scene-status{flex:1;min-width:150px}.scene-footnote{font-size:11px}}
+
 </style>
 </head><body><main>
 <header class="brand"><div class="logo">☾</div><div><div class="eyebrow">Une nuit · Un village · Des secrets</div><h1>Blood on the Cl<span class="clock-letter" aria-label="o"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 6v6l4 2"></path></svg></span>cktower</h1></div></header>
@@ -193,6 +219,23 @@ body.phase-night .notes-card { display:block !important; }
 <section id="lobby" class="hidden">
 <div id="lobbyInfoCard" class="card"><div class="eyebrow" id="modeLabel">Salon</div><h2 id="roomHeading">Salle d'attente</h2><p>Code à transmettre aux joueurs :</p><div class="rolename" id="roomCodeDisplay" style="letter-spacing:.12em"></div><div class="actions"><button class="secondary" id="copyCode">Copier le code</button><button class="secondary" id="refresh">Actualiser</button></div><div id="lobbyMsg" class="notice hidden"></div></div>
 <div id="lobbyRosterCard" class="card"><h2>Joueurs dans le salon</h2><p>La liste se met à jour automatiquement.</p><div id="playerRoster" class="list"></div></div>
+<div id="playerLobbyScene" class="player-lobby-scene hidden">
+ <div class="player-lobby-top">
+  <div class="brand-lockup"><div class="brand-mark">♜</div><div><div class="brand-title">Blood on the Clocktower</div><div class="brand-subtitle">Le village des secrets</div></div></div>
+  <div class="lobby-count"><span id="sceneRoomTitle">Salle d’attente</span><strong><span id="scenePlayerCount">0</span> joueurs</strong></div>
+  <div class="lobby-code"><span>Code de la partie</span><strong id="sceneRoomCode">———</strong></div>
+ </div>
+ <div class="scene-stage">
+  <div class="scene-ambient"></div>
+  <div class="scene-table"><div class="scene-table-ring"></div><div class="scene-table-center"><span>☼</span><strong>BLOOD ON THE CLOCKTOWER</strong><small>LE CONSEIL DU VILLAGE</small></div><div id="sceneChairs" class="scene-chairs"></div></div>
+ </div>
+ <div class="player-lobby-bottom">
+  <div class="scene-status"><span class="status-dot"></span><div><strong id="sceneReadyCount">0 / 0 joueurs prêts</strong><small id="sceneReadyText">En attente des autres joueurs…</small></div></div>
+  <button id="sceneReadyBtn" class="scene-ready-btn" type="button">✦ Je suis prêt</button>
+  <button id="sceneLeaveBtn" class="scene-leave-btn" type="button">Quitter le salon</button>
+ </div>
+ <p class="scene-footnote">La partie commencera lorsque l’organisateur sera prêt. Garde ton rôle secret.</p>
+</div>
  <div id="organizerPanel" class="card hidden"><h2>Attribuer les rôles</h2><p>Choisis manuellement le rôle de chaque joueur. Seul l'organisateur voit les attributions avant le lancement.</p><div id="organizerRoleSummaryBefore" class="notice hidden"></div><div id="assignments" class="list"></div><label for="roleCatalog">Choisir un rôle dans le catalogue</label><select id="roleCatalog"><option value="">— Choisir un rôle —</option><optgroup label="Démon"><option value="Diablotin">Diablotin</option></optgroup><optgroup label="Sbires"><option value="Baron">Baron</option><option value="Empoisonneur">Empoisonneur</option><option value="Espion">Espion</option><option value="Femme Écarlate">Femme Écarlate</option></optgroup><optgroup label="Citadins"><option value="Archiviste">Archiviste</option><option value="Croque-mort">Croque-mort</option><option value="Cuistot">Cuistot</option><option value="Empathe">Empathe</option><option value="Enquêteur">Enquêteur</option><option value="Fossoyeur">Fossoyeur</option><option value="Lavandière">Lavandière</option><option value="Maire">Maire</option><option value="Moine">Moine</option><option value="Pourfendeur">Pourfendeur</option><option value="Soldat">Soldat</option><option value="Vierge">Vierge</option><option value="Voyante">Voyante</option></optgroup><optgroup label="Étrangers"><option value="Ivrogne">Ivrogne</option><option value="Majordome">Majordome</option><option value="Reclus">Reclus</option><option value="Saint">Saint</option></optgroup></select><p class="hint">Catalogue des 22 rôles du document Fukano — Trouble Brewing. Sélectionne un rôle pour préremplir sa description, que tu peux modifier avant de l’attribuer.</p><label for="roleName">Nom du rôle</label><input id="roleName" maxlength="80" placeholder="Ex. Médecin"><label for="roleDesc">Description / pouvoirs</label><textarea id="roleDesc" maxlength="4000" placeholder="Explique ce que le joueur doit faire, ses pouvoirs et ses limites."></textarea><div class="actions"><button id="saveRole">Enregistrer le rôle choisi</button><button class="secondary" id="clearRole">Retirer le rôle</button></div><div id="assignMsg" class="notice hidden"></div><div class="actions"><button id="launchBtn">Lancer la partie</button><button class="danger" id="endBtn">Fermer le salon</button></div></div>
 <div id="playerPanel" class="card hidden"><h2>Tu as rejoint la partie</h2><p id="waitText">Tu es dans le salon. Attends que l’organisateur lance la partie.</p><button id="readyBtn" class="secondary" type="button">Je suis prêt</button><div id="readyMsg" class="notice hidden"></div><div id="myRole" class="rolebox hidden"><div class="eyebrow">Ta fiche personnelle — ne la montre pas</div><div id="myRoleName" class="rolename"></div><div id="myRoleDesc" class="desc"></div></div><button id="leaveBtn" class="secondary" style="margin-top:14px">Quitter cet écran</button></div>
 <div id="gameControlPanel" class="card hidden"><div class="eyebrow">Espace privé</div><h2>Commandes de l’organisateur</h2><p>Les commandes de conduite de partie sont réservées à l’organisateur.</p><div class="phase-pill" id="phaseStatus">Phase : attente</div><div class="notice" style="display:block;margin-top:10px">Important : une nomination ouvre un vote, elle n’élimine personne. Traite les nominations dans l’ordre, clôture chaque vote, puis clique toi-même sur le nom du joueur à éliminer. Son rôle restera secret.</div><div class="phase-controls"><button id="nightBtn" class="secondary">☾ Lancer la nuit</button><button id="dayBtn" class="secondary">☀ Lancer le jour</button><button id="callCouncilBtn">🔔 Appeler le conseil</button><button id="endCouncilBtn" class="secondary">Terminer le conseil</button></div><div id="gameMsg" class="notice hidden"></div><p class="hint">Pour éliminer un joueur après les nominations et les votes, clique sur son nom autour de la table. Son rôle ne sera pas révélé.</p><h3>Récapitulatif secret des rôles</h3><p class="hint">Visible uniquement pour l’organisateur.</p><div id="organizerRoleSummaryAfter" class="list"></div><div class="actions" style="margin-top:18px;padding-top:14px;border-top:1px solid #765239"><button id="endGameRoomBtn" class="danger" type="button">⚑ Fermer le salon</button></div></div>
@@ -264,11 +307,12 @@ async function refreshLobby(){
  }
  renderRoster();
  const organizer=room.owner_id===user.id;
+ renderPlayerLobbyScene();
  const gameStarted=room.status==="started";
  // Une fois la partie lancée, on retire l'écran de salon (code, liste et panneau d'attente)
  // pour laisser la table et les commandes utiles occuper l'écran.
- $("lobbyInfoCard").classList.toggle("hidden",gameStarted);
- $("lobbyRosterCard").classList.toggle("hidden",gameStarted);
+ $("lobbyInfoCard").classList.toggle("hidden",gameStarted||!organizer);
+ $("lobbyRosterCard").classList.toggle("hidden",gameStarted||!organizer);
  $("organizerPanel").classList.toggle("hidden",!organizer||gameStarted);
  $("playerPanel").classList.toggle("hidden",organizer||gameStarted);
  $("gameControlPanel").classList.toggle("hidden",!organizer||!gameStarted);
@@ -439,6 +483,40 @@ async function endCouncil(){
  await setGamePhase("day");
 }
 
+function renderPlayerLobbyScene(){
+ const scene=$("playerLobbyScene");if(!scene)return;
+ const organizer=!!(room&&user&&room.owner_id===user.id);
+ const show=!!room&&room.status!=="started"&&!organizer;
+ scene.classList.toggle("hidden",!show);
+ if(!show)return;
+ $("sceneRoomTitle").textContent=room.title||"Salle d’attente";
+ $("sceneRoomCode").textContent=room.code||"———";
+ $("scenePlayerCount").textContent=players.length;
+ const ready=players.filter(p=>p.is_ready).length;
+ $("sceneReadyCount").textContent=`${ready} / ${players.length} joueurs prêts`;
+ $("sceneReadyText").textContent=ready===players.length&&players.length?"Tout le monde est prêt !":"En attente des autres joueurs…";
+ const me=players.find(p=>p.user_id===user?.id);
+ const readyBtn=$("sceneReadyBtn");
+ readyBtn.classList.toggle("is-ready",!!me?.is_ready);
+ readyBtn.textContent=me?.is_ready?"✓ Tu es prêt":"✦ Je suis prêt";
+ const host=$("sceneChairs");host.innerHTML="";
+ if(!players.length){host.innerHTML='<p class="scene-empty">En attente des joueurs…</p>';return}
+ const ordered=[...players].sort((a,b)=>new Date(a.created_at||0)-new Date(b.created_at||0));
+ const n=ordered.length;
+ ordered.forEach((p,i)=>{
+  const angle=(-Math.PI/2)+(2*Math.PI*i/n);
+  const radius=n>12?43:n>8?41:39;
+  const x=50+radius*Math.cos(angle), y=50+radius*Math.sin(angle);
+  const seat=document.createElement("div");
+  seat.className="scene-seat"+(p.user_id===user?.id?" me":"")+(p.is_ready?" ready":"")+(p.is_alive===false?" dead":"");
+  seat.style.left=x+"%";seat.style.top=y+"%";
+  const chair=document.createElement("div");chair.className="scene-chair";
+  const label=document.createElement("div");label.className="scene-seat-name";
+  const num=document.createElement("span");num.className="scene-seat-number";num.textContent=String(i+1);
+  label.append(num,document.createTextNode(p.name));
+  seat.append(chair,label);host.append(seat);
+ });
+}
 function renderRoster(){
  const host=$("playerRoster");host.innerHTML="";
  if(!players.length){host.textContent="Aucun joueur pour l’instant.";return}
