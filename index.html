@@ -360,8 +360,8 @@ const SUPABASE_URL="https://wajaawmpkbqsfxffojfu.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_1YPTK7Ehsm7fPfcsAJ-lAg_Aoc5SbBS";
 const $=id=>document.getElementById(id);
 let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, councilAlertTimer=null, nominations=[], secretRoleData=null, currentPhase="day", lastOwnAliveState=null, eliminationOverlayTimer=null, lastObservedRoomStatus=null, lobbyRefreshBusy=false;
-function msg(id,text,kind=""){const el=$(id);el.textContent=text;el.className="notice"+(kind?" "+kind:"");el.classList.remove("hidden")}
-function clearMsg(id){$(id).classList.add("hidden")}
+function msg(id,text,kind=""){const el=$(id);if(!el){console.warn("Zone de message absente :",id,text);return}el.textContent=text;el.className="notice"+(kind?" "+kind:"");el.classList.remove("hidden")}
+function clearMsg(id){const el=$(id);if(el)el.classList.add("hidden")}
 function view(id){["home","lobby"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id!=="lobby")$("roleReveal").classList.add("hidden")}
 function campForRole(roleName){
  const name=(roleName||"").trim().toLocaleLowerCase("fr");
@@ -440,7 +440,7 @@ async function refreshLobby(){
  else {
   await renderPlayerRole();
   $("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l'organisateur lance la partie.";
-  if(hasJustStarted&&mode==="player"&&secretRoleData){
+  if(room.status==="started"&&mode==="player"&&secretRoleData&&(hasJustStarted||!lastRoleRevealKey)){
    roleRevealDismissed=false;
    showRoleReveal(secretRoleData.role_name,secretRoleData.role_description);
    const meForReveal=players.find(p=>p.user_id===user.id);
@@ -727,8 +727,11 @@ function renderPlayerLobbyScene(){
  const readyBtn=$("sceneReadyBtn");
  readyBtn.classList.toggle("is-ready",!!me?.is_ready);
  readyBtn.textContent=me?.is_ready?"✓ Tu es prêt":"✦ Je suis prêt";
- const host=$("sceneChairs");host.innerHTML="";
- if(!players.length){host.innerHTML='<p class="scene-empty">En attente des joueurs…</p>';return}
+ const host=$("sceneChairs");
+ if(host){
+  host.innerHTML="";
+  if(!players.length){host.innerHTML='<p class="scene-empty">En attente des joueurs…</p>';return}
+ }
  const ordered=[...players].sort((a,b)=>new Date(a.created_at||0)-new Date(b.created_at||0));
  const n=ordered.length;
  ordered.forEach((p,i)=>{
@@ -742,7 +745,7 @@ function renderPlayerLobbyScene(){
   const label=document.createElement("div");label.className="scene-seat-name";
   const num=document.createElement("span");num.className="scene-seat-number";num.textContent=String(i+1);
   label.append(num,document.createTextNode(p.name));
-  seat.append(chair,label);host.append(seat);
+  seat.append(chair,label);if(host)host.append(seat);
  });
 }
 function renderRoster(){
