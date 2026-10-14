@@ -313,6 +313,7 @@ body.player-lobby-waiting .player-lobby-list{overflow:visible!important;max-heig
  <div class="player-lobby-bottom">
   <div class="scene-status"><span class="status-dot"></span><div><strong id="sceneReadyCount">0 / 0 joueurs prêts</strong><small id="sceneReadyText">En attente des autres joueurs…</small></div></div>
   <button id="sceneReadyBtn" class="scene-ready-btn" type="button">✦ Je suis prêt</button>
+  <div id="sceneReadyMsg" class="notice hidden" aria-live="polite"></div>
   <button id="sceneLeaveBtn" class="scene-leave-btn" type="button">Quitter le salon</button>
  </div>
  <p class="scene-footnote">La partie commencera lorsque l’organisateur sera prêt. Garde ton rôle secret.</p>
@@ -358,7 +359,7 @@ body.player-lobby-waiting .player-lobby-list{overflow:visible!important;max-heig
 const SUPABASE_URL="https://wajaawmpkbqsfxffojfu.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_1YPTK7Ehsm7fPfcsAJ-lAg_Aoc5SbBS";
 const $=id=>document.getElementById(id);
-let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, councilAlertTimer=null, nominations=[], secretRoleData=null, currentPhase="day", lastOwnAliveState=null, eliminationOverlayTimer=null;
+let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, councilAlertTimer=null, nominations=[], secretRoleData=null, currentPhase="day", lastOwnAliveState=null, eliminationOverlayTimer=null, lastObservedRoomStatus=null, lobbyRefreshBusy=false;
 function msg(id,text,kind=""){const el=$(id);el.textContent=text;el.className="notice"+(kind?" "+kind:"");el.classList.remove("hidden")}
 function clearMsg(id){$(id).classList.add("hidden")}
 function view(id){["home","lobby"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id!=="lobby")$("roleReveal").classList.add("hidden")}
@@ -404,10 +405,18 @@ function updatePlayerLobbyCompact(){
  if($("sceneReadyText"))$("sceneReadyText").textContent=readyCount===(players||[]).length&&(players||[]).length?"Tout le monde est prêt !":"En attente des autres joueurs…";
 }
 async function refreshLobby(){
- if(!room)return;
- const previousStatus=room?.status;
- const {data:rd,error:re}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",room.id).single();if(re)throw re;room=rd;
- const justStarted=previousStatus!=="started"&&room.status==="started";
+ if(!room||lobbyRefreshBusy)return;
+ lobbyRefreshBusy=true;
+ try{
+ const priorStatus=lastObservedRoomStatus;
+ const {data:rd,error:re}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",room.id).single();if(re)throw re;
+ room=rd;
+ const hasJustStarted=room.status==="started"&&priorStatus!=="started";
+ lastObservedRoomStatus=room.status;
+ if(hasJustStarted&&mode==="player"){
+  roleRevealDismissed=false;
+  lastRoleRevealKey=null;
+ }
  $("roomCodeDisplay").textContent=room.code;$("roomHeading").textContent=room.title||"Salle d'attente";$("modeLabel").textContent=room.status==="started"?"Partie en cours":"Salon d'attente";
  const {data:pd,error:pe}=await sb.from("players").select("id,name,user_id,created_at,is_ready,is_alive").eq("room_id",room.id).order("created_at");if(pe)throw pe;players=pd||[];
  const ownPlayer=players.find(p=>p.user_id===user?.id);
@@ -428,12 +437,9 @@ async function refreshLobby(){
  $("gameControlPanel").classList.toggle("hidden",!organizer||!gameStarted);
  $("playerGamePanel").classList.toggle("hidden",!gameStarted);$("playerRolePanel").classList.toggle("hidden",organizer||!gameStarted);document.body.classList.toggle("organizer-view",organizer);document.body.classList.toggle("player-started-view",!organizer&&room.status==="started");
  if(organizer){renderAssignments();await renderOrganizerRoleSummary();$("launchBtn").disabled=room.status==="started";$("launchBtn").textContent=room.status==="started"?"Partie lancée":"Lancer la partie";$("assignments").querySelectorAll("select,button").forEach(x=>x.disabled=room.status==="started");}
- else {
-  if(justStarted){roleRevealDismissed=false;lastRoleRevealKey=null;}
-  await renderPlayerRole();
-  $("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l’organisateur lance la partie.";
- }
+ else {await renderPlayerRole();$("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l'organisateur lance la partie."}
  await refreshGameState(organizer);
+ }finally{lobbyRefreshBusy=false}
 }
 async function renderOrganizerRoleSummary(){
  if(!room||!user||room.owner_id!==user.id)return;
@@ -463,7 +469,6 @@ function showEliminationAnimation(title="Tu es éliminé !",caption="Ton aventur
 $("dismissElimination").onclick=()=>{$("eliminationOverlay").classList.add("hidden");if(eliminationOverlayTimer)clearTimeout(eliminationOverlayTimer)};
 let lastSuccessionNoticeRoom=null;
 let dismissedGameAnnouncementRoom=null;
-let lastObservedRoomStatus=null;
 const dismissedVictoryKeyPrefix="botc_dismissed_victory_";
 async function refreshDemonNightUI(organizer,phase){
  const panel=$("demonNightAction");if(!panel)return;
@@ -812,24 +817,29 @@ async function renderPlayerRole(){
 $("backToLobbyBtn").onclick=()=>{roleRevealDismissed=true;$("roleReveal").classList.add("hidden");view("lobby")};
 $("organizerBtn").onclick=()=>{$("organizerLogin").classList.toggle("hidden");clearMsg("homeMsg")};
 $("cancelCreate").onclick=()=>$("organizerLogin").classList.add("hidden");
-$("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
-$("joinBtn").onclick=async()=>{if(!ready())return;const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}try{$("joinBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});if(error)throw error;room=data;mode="player";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling()}catch(e){msg("homeMsg",friendly(e),"error")}finally{$("joinBtn").disabled=false}};
-$("readyBtn").onclick=async()=>{if(!room)return;const me=players.find(p=>p.user_id===user.id);if(!me)return;try{const {error}=await sb.rpc("set_player_ready",{p_room_id:room.id,p_ready:!me.is_ready});if(error)throw error;await refreshLobby();msg("readyMsg",!me.is_ready?"Tu es marqué prêt.":"Tu n’es plus marqué prêt.", "success")}catch(e){msg("readyMsg","Impossible de modifier ton statut : "+friendly(e),"error")}};
-$("sceneReadyBtn").onclick=async()=>{
- if(!room)return;
- const me=players.find(p=>p.user_id===user.id);if(!me)return;
- const btn=$("sceneReadyBtn");if(btn.disabled)return;btn.disabled=true;
- try{const {error}=await sb.rpc("set_player_ready",{p_room_id:room.id,p_ready:!me.is_ready});if(error)throw error;await refreshLobby()}
- catch(e){msg("readyMsg","Impossible de modifier ton statut : "+friendly(e),"error")}
- finally{btn.disabled=false}
-};
-$("sceneLeaveBtn").onclick=()=>$("leaveBtn").click();
-
+$("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;lastObservedRoomStatus=room.status;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
+$("joinBtn").onclick=async()=>{if(!ready())return;const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}try{$("joinBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});if(error)throw error;room=data;lastObservedRoomStatus=room.status;mode="player";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling()}catch(e){msg("homeMsg",friendly(e),"error")}finally{$("joinBtn").disabled=false}};
+async function toggleReadyStatus(buttonId,messageId){
+ if(!room||!user)return;
+ const me=players.find(p=>p.user_id===user.id);
+ if(!me){msg(messageId,"Ton profil n’apparaît pas dans la liste des joueurs. Actualise la page ou rejoins de nouveau le salon.","error");return}
+ const button=$(buttonId);if(button)button.disabled=true;
+ clearMsg(messageId);
+ try{
+  const {error}=await sb.rpc("set_player_ready",{p_room_id:room.id,p_ready:!me.is_ready});
+  if(error)throw error;
+  await refreshLobby();
+  msg(messageId,!me.is_ready?"✓ Tu es marqué prêt.":"Tu n’es plus marqué prêt.", "success");
+ }catch(e){msg(messageId,"Impossible de modifier ton statut : "+friendly(e),"error")}
+ finally{if(button)button.disabled=false}
+}
+$("readyBtn").onclick=()=>toggleReadyStatus("readyBtn","readyMsg");
+$("sceneReadyBtn").onclick=()=>toggleReadyStatus("sceneReadyBtn","sceneReadyMsg");
 $("saveRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord le joueur à qui attribuer ce rôle.","error");return}const name=$("roleName").value.trim(),desc=$("roleDesc").value.trim();if(!name||!desc){msg("assignMsg","Renseigne le nom du rôle et sa description.","error");return}try{const {error}=await sb.rpc("assign_role",{p_room_id:room.id,p_player_id:selectedPlayer,p_role_name:name,p_role_description:desc});if(error)throw error;msg("assignMsg","Rôle enregistré pour le joueur sélectionné.","success");renderAssignments();await renderOrganizerRoleSummary();}catch(e){msg("assignMsg",friendly(e),"error")}};
 $("clearRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord un joueur.","error");return}try{const {error}=await sb.rpc("remove_role",{p_room_id:room.id,p_player_id:selectedPlayer});if(error)throw error;$("roleName").value="";$("roleDesc").value="";$("roleCatalog").value="";msg("assignMsg","Rôle retiré.","success");renderAssignments();await renderOrganizerRoleSummary()}catch(e){msg("assignMsg",friendly(e),"error")}};
-$("launchBtn").onclick=async()=>{if(!room)return;if(!confirm("Lancer la partie ? Les joueurs pourront voir leur propre rôle."))return;try{const {error}=await sb.rpc("start_room",{p_room_id:room.id});if(error)throw error;room.status="started";await refreshLobby();msg("lobbyMsg","Partie lancée ! Chaque joueur peut découvrir son rôle avec l’animation de révélation.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
+$("launchBtn").onclick=async()=>{if(!room)return;if(!confirm("Lancer la partie ? Les joueurs pourront voir leur propre rôle."))return;try{const {error}=await sb.rpc("start_room",{p_room_id:room.id});if(error)throw error;lastObservedRoomStatus=null;await refreshLobby();msg("lobbyMsg","Partie lancée ! Chaque joueur reçoit le rôle qui lui a été attribué, avec sa description.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
 function clearSavedRoom(){try{localStorage.removeItem("botc_room_id");localStorage.removeItem("botc_mode")}catch(e){console.warn("Impossible d’effacer la session locale",e)}}
-function returnHome(message=""){clearInterval(refreshTimer);refreshTimer=null;room=null;players=[];selectedPlayer=null;mode=null;clearSavedRoom();document.body.classList.remove("player-started-view");view("home");$("organizerLogin").classList.add("hidden");["lobbyMsg","createMsg"].forEach(clearMsg);if(message)msg("homeMsg",message,"success")}
+function returnHome(message=""){clearInterval(refreshTimer);refreshTimer=null;room=null;players=[];selectedPlayer=null;mode=null;lastObservedRoomStatus=null;clearSavedRoom();document.body.classList.remove("player-started-view");view("home");$("organizerLogin").classList.add("hidden");["lobbyMsg","createMsg"].forEach(clearMsg);if(message)msg("homeMsg",message,"success")}
 async function closeCurrentRoom(){if(!room||!confirm("Fermer définitivement ce salon ? Tous les joueurs seront renvoyés à l’accueil."))return;try{const {error}=await sb.rpc("close_room",{p_room_id:room.id});if(error)throw error;returnHome("Salon fermé. Tu peux maintenant créer ou rejoindre une nouvelle partie.")}catch(e){msg("gameMsg",friendly(e),"error");msg("lobbyMsg",friendly(e),"error")}}
 $("endBtn").onclick=closeCurrentRoom;
 $("endGameRoomBtn").onclick=closeCurrentRoom;
@@ -843,7 +853,7 @@ $("dayBtn").onclick=()=>setGamePhase("day");
 $("showRoleDescBtn").onclick=()=>{if(currentPhase==="night")$("playerSecretRoleDesc").classList.remove("hidden")};
 $("hideRoleDescBtn").onclick=()=>$("playerSecretRoleDesc").classList.add("hidden");
 $("privateNotes").addEventListener("input",()=>{clearTimeout(notesSaveTimer);notesSaveTimer=setTimeout(savePrivateNotes,250)});
-function startPolling(){clearInterval(refreshTimer);refreshTimer=setInterval(async()=>{try{if(room)await refreshLobby()}catch(e){console.warn(e)}},4000)}
+function startPolling(){clearInterval(refreshTimer);refreshTimer=setInterval(async()=>{try{if(room)await refreshLobby()}catch(e){console.warn(e);if(mode==="player"&&room?.status!=="started")msg("sceneReadyMsg","Synchronisation impossible : "+friendly(e),"error");else if(mode==="player")msg("lobbyMsg","Actualisation impossible : "+friendly(e),"error")}},2000)}
 async function restorePreviousRoom(){
  if(!ready())return;
  let saved=null,savedMode=null;
