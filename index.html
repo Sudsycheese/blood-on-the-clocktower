@@ -224,32 +224,40 @@ body.phase-night .notes-card { display:block !important; }
 @media(max-width:650px){.dynamic-seat{width:clamp(47px,13vw,68px);gap:3px}.dynamic-chair{width:27px;height:27px;border-radius:7px}.dynamic-seat .seat-name-only{font-size:clamp(8px,2.5vw,11px)!important;padding:3px 4px!important;max-width:125%!important}.phase-counter{font-size:13px}}
 
 
-/* Guillotine gothique : bois noir, fer ancien, arches et détails ornementaux, sans gore */
-.elimination-card{border:1px solid #8d704f!important;border-radius:8px!important;background:radial-gradient(ellipse at 50% 0%,#30202b 0,#100d15 72%)!important;box-shadow:0 0 0 4px #171018,0 0 0 5px #634832,0 24px 90px #000e!important}
-.guillotine-scene{height:250px!important;max-width:340px!important;filter:drop-shadow(0 8px 10px #000b)}
-.guillotine-frame{width:192px!important;height:211px!important;top:12px!important;border-left:13px solid #30262a!important;border-right:13px solid #30262a!important;border-top:13px solid #30262a!important;border-radius:5px 5px 0 0!important;filter:drop-shadow(0 0 0 #000)!important;background:linear-gradient(90deg,#151117,#4a3437 22%,#21191f 50%,#4a3437 78%,#151117)!important;box-shadow:inset 0 0 0 2px #9a784c, inset 0 0 0 6px #171117}
-.guillotine-frame:before{content:"";position:absolute;left:18px;right:18px;top:0;bottom:0;border-left:2px solid #a98a5d88;border-right:2px solid #a98a5d88;pointer-events:none}
-.guillotine-frame:after{left:-24px!important;right:-24px!important;bottom:0;height:15px!important;background:linear-gradient(180deg,#806346,#261d22 45%,#100d12)!important;border:2px solid #9b7b50;border-radius:2px!important;box-shadow:0 -5px 0 #151117}
-.guillotine-slot{top:22px!important;width:142px!important;height:12px!important;background:#08070b!important;border:1px solid #8d704f;border-radius:1px!important}
-.guillotine-blade{top:26px!important;width:142px!important;height:21px!important;background:linear-gradient(180deg,#e4dfd0 0%,#7d8490 35%,#25252e 52%,#c4bba7 100%)!important;clip-path:polygon(0 0,100% 0,57% 77%,50% 100%,43% 77%)!important;filter:drop-shadow(0 0 2px #d8c7a0) drop-shadow(0 5px 4px #000c)!important}
-.guillotine-blade:after{content:"✦";position:absolute;left:50%;top:0;transform:translateX(-50%);color:#2c2027;font-size:12px}
-.cartoon-head{border:3px solid #c4a574!important;background:#e5d5b6!important;color:#31232a!important;box-shadow:0 0 0 3px #241821,0 4px 10px #0009!important}
-.cartoon-body,.cartoon-person:before,.cartoon-person:after{background:linear-gradient(135deg,#45313e,#1b1722)!important;border-color:#8b6c56!important}
-.elimination-caption{color:#d9c29d!important}
-
-
-/* En attente : aucun faux plateau/table avant le lancement */
-.player-lobby-scene .scene-stage{height:auto!important;min-height:250px!important;display:grid!important;place-items:center!important;padding:26px 16px!important;background:radial-gradient(ellipse at 50% 45%,#34242a 0,#17131b 45%,#0b0a0f 100%)!important}
+/* Lobby joueur compact : une seule carte, liste et bouton prêt, sans table ni ancienne fiche */
+.player-lobby-scene .scene-stage{height:auto!important;min-height:0!important;padding:0!important;background:transparent!important}
 .player-lobby-scene .scene-ambient,.player-lobby-scene .scene-table{display:none!important}
-.lobby-waiting-card{width:min(440px,100%);padding:28px 22px;text-align:center;border:1px solid #6c5039;border-radius:16px;background:linear-gradient(145deg,#1b1720,#100e14);box-shadow:0 15px 45px #0008}
-.lobby-waiting-symbol{width:66px;height:66px;margin:0 auto 14px;display:grid;place-items:center;border:1px solid #b18a59;border-radius:50%;background:radial-gradient(circle,#4c3033,#17121a);font-size:34px;color:#e1bd82}
-.lobby-waiting-card h2{font:700 clamp(22px,4vw,30px) Georgia,serif;color:#f0d2a0;margin:0 0 9px}
-.lobby-waiting-card p{color:#c7b6a5;line-height:1.55}
-.lobby-waiting-separator{height:1px;margin:18px auto;background:linear-gradient(90deg,transparent,#795b40,transparent)}
-.lobby-waiting-card strong,.lobby-waiting-card small{display:block}
-.lobby-waiting-card strong{color:#ead0a2;font-size:16px}
-.lobby-waiting-card small{margin-top:5px;color:#b8a697}
-@media(max-width:700px){.player-lobby-scene .scene-stage{min-height:220px!important;padding:18px 12px!important}.lobby-waiting-card{padding:23px 17px}}
+.player-lobby-list-card{width:100%;padding:18px;border:1px solid #806044;border-radius:16px;background:linear-gradient(145deg,#1b1720,#100e14);box-shadow:0 12px 36px #0007}
+.player-lobby-list-heading{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid #5e4938}
+.player-lobby-list-icon{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #b18a59;border-radius:50%;background:radial-gradient(circle,#4c3033,#17121a);font-size:23px;color:#e1bd82}
+.player-lobby-list-heading h2{margin:0;color:#f0d2a0;font:700 22px Georgia,serif}
+.player-lobby-list-heading p{margin:4px 0 0;color:#bba998;font-size:13px}
+.player-lobby-list{display:grid;gap:8px;margin:14px 0}
+.player-lobby-person{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #403039;border-radius:10px;background:#100e14}
+.player-lobby-person-name{min-width:0;overflow-wrap:anywhere;color:#f0e3d1;font-weight:600}
+.player-lobby-person-status{flex:0 0 auto;font-size:12px;font-weight:700}
+.player-lobby-person-status.ready{color:#9ed9a4}
+.player-lobby-person-status.waiting{color:#d0ad78}
+.player-lobby-empty{padding:16px 10px;text-align:center;color:#bba998}
+.player-lobby-ready-summary{padding-top:12px;border-top:1px solid #5e4938;color:#e8c895;font-size:14px}
+.player-lobby-scene .personal-secret,.player-lobby-scene #personalSecret,.player-lobby-scene .secret-role-card{display:none!important}
+@media(max-width:650px){.player-lobby-list-card{padding:14px}.player-lobby-list-heading h2{font-size:20px}.player-lobby-person{padding:9px 10px}}
+
+
+body.player-lobby-waiting{overflow:hidden!important}
+body.player-lobby-waiting #personalSecret,
+body.player-lobby-waiting .personal-secret,
+body.player-lobby-waiting .secret-role-card,
+body.player-lobby-waiting [data-panel="personal-secret"]{display:none!important}
+body.player-lobby-waiting .player-lobby-scene{min-height:calc(100dvh - 24px)!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
+body.player-lobby-waiting .player-lobby-scene .scene-stage{flex:1 1 auto!important}
+body.player-lobby-waiting .player-lobby-scene .player-lobby-list-card{max-height:calc(100dvh - 170px);overflow:auto}
+
+
+body.player-lobby-waiting .role-card,
+body.player-lobby-waiting .my-role,
+body.player-lobby-waiting #rolePanel,
+body.player-lobby-waiting #playerSecretCard{display:none!important}
 
 </style>
 </head><body><main>
@@ -273,13 +281,13 @@ body.phase-night .notes-card { display:block !important; }
   <div class="lobby-code"><span>Code de la partie</span><strong id="sceneRoomCode">———</strong></div>
  </div>
  <div class="scene-stage">
-  <div class="lobby-waiting-card">
-   <div class="lobby-waiting-symbol" aria-hidden="true">☾</div>
-   <h2>La salle d’attente</h2>
-   <p>Installe-toi confortablement et attends que l’organisateur lance la partie.</p>
-   <div class="lobby-waiting-separator"></div>
-   <strong id="sceneReadyCountLobby">0 / 0 joueurs prêts</strong>
-   <small id="sceneReadyTextLobby">En attente des autres joueurs…</small>
+  <div class="player-lobby-list-card">
+   <div class="player-lobby-list-heading">
+    <span class="player-lobby-list-icon" aria-hidden="true">☾</span>
+    <div><h2>Joueurs du salon</h2><p id="sceneReadyText">En attente des autres joueurs…</p></div>
+   </div>
+   <div id="scenePlayerList" class="player-lobby-list"></div>
+   <div class="player-lobby-ready-summary"><strong id="sceneReadyCount">0 / 0 joueurs prêts</strong></div>
   </div>
  </div>
  <div class="player-lobby-bottom">
@@ -352,6 +360,22 @@ function ready(){if(!window.supabase){msg("homeMsg","Impossible de charger la bi
 async function ensureUser(){let {data,error}=await sb.auth.getSession();if(error)throw error;if(data.session){user=data.session.user;return user}let r=await sb.auth.signInAnonymously();if(r.error)throw r.error;user=r.data.user;return user}
 function friendly(e){return e?.message||String(e||"Erreur inconnue")}
 async function loadRoom(roomId){const {data,error}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",roomId).single();if(error)throw error;room=data;await refreshLobby()}
+function updatePlayerLobbyCompact(){
+ const isWaiting=!!room&&room.status!=="started"&&mode==="player";
+ document.body.classList.toggle("player-lobby-waiting",isWaiting);
+ const list=$("scenePlayerList");
+ if(list){
+  const roster=Array.isArray(players)?players:[];
+  list.innerHTML=roster.length?roster.map(p=>{
+   const ready=!!p.is_ready;
+   const name=escapeHtml(p.name||"Joueur");
+   return `<div class="player-lobby-person"><span class="player-lobby-person-name">${name}</span><span class="player-lobby-person-status ${ready?"ready":"waiting"}">${ready?"✓ Prêt":"En attente"}</span></div>`;
+  }).join(""):'<div class="player-lobby-empty">Aucun joueur pour le moment.</div>';
+ }
+ const readyCount=Array.isArray(players)?players.filter(p=>p.is_ready).length:0;
+ if($("sceneReadyCount"))$("sceneReadyCount").textContent=`${readyCount} / ${(players||[]).length} joueurs prêts`;
+ if($("sceneReadyText"))$("sceneReadyText").textContent=readyCount===(players||[]).length&&(players||[]).length?"Tout le monde est prêt !":"En attente des autres joueurs…";
+}
 async function refreshLobby(){
  if(!room)return;
  const {data:rd,error:re}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",room.id).single();if(re)throw re;room=rd;
@@ -635,9 +659,7 @@ function renderPlayerLobbyScene(){
  const ready=players.filter(p=>p.is_ready).length;
  $("sceneReadyCount").textContent=`${ready} / ${players.length} joueurs prêts`;
  $("sceneReadyText").textContent=ready===players.length&&players.length?"Tout le monde est prêt !":"En attente des autres joueurs…";
- const lobbyReadyCount=$("sceneReadyCountLobby"),lobbyReadyText=$("sceneReadyTextLobby");
- if(lobbyReadyCount)lobbyReadyCount.textContent=`${ready} / ${players.length} joueurs prêts`;
- if(lobbyReadyText)lobbyReadyText.textContent=ready===players.length&&players.length?"Tout le monde est prêt !":"En attente des autres joueurs…";
+ updatePlayerLobbyCompact();
  const me=players.find(p=>p.user_id===user?.id);
  const readyBtn=$("sceneReadyBtn");
  readyBtn.classList.toggle("is-ready",!!me?.is_ready);
@@ -727,12 +749,8 @@ async function renderPlayerRole(){
   $("myRoleName").textContent=playerFacingData.role_name;$("myRoleDesc").textContent=playerFacingData.role_description;$("myRole").classList.remove("hidden");
   const key=me.id+"|"+playerFacingData.role_name+"|"+playerFacingData.role_description;
   if(lastRoleRevealKey!==key){
-    lastRoleRevealKey=key;
-    if(roleRevealDismissed){
-      $("roleReveal").classList.add("hidden");
-    }else{
-      showRoleReveal(playerFacingData.role_name,playerFacingData.role_description);
-    }
+    lastRoleRevealKey=key;roleRevealDismissed=false;
+    showRoleReveal(playerFacingData.role_name,playerFacingData.role_description);
   }else if(!roleRevealDismissed){
     if($("roleReveal").classList.contains("hidden"))showRoleReveal(playerFacingData.role_name,playerFacingData.role_description);
   }else{
@@ -746,7 +764,7 @@ $("backToLobbyBtn").onclick=()=>{roleRevealDismissed=true;$("roleReveal").classL
 $("organizerBtn").onclick=()=>{$("organizerLogin").classList.toggle("hidden");clearMsg("homeMsg")};
 $("cancelCreate").onclick=()=>$("organizerLogin").classList.add("hidden");
 $("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
-$("joinBtn").onclick=async()=>{if(!ready())return;const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}try{$("joinBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});if(error)throw error;room=data;mode="player";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=room.status==="started";lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling()}catch(e){msg("homeMsg",friendly(e),"error")}finally{$("joinBtn").disabled=false}};
+$("joinBtn").onclick=async()=>{if(!ready())return;const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}try{$("joinBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});if(error)throw error;room=data;mode="player";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling()}catch(e){msg("homeMsg",friendly(e),"error")}finally{$("joinBtn").disabled=false}};
 $("readyBtn").onclick=async()=>{if(!room)return;const me=players.find(p=>p.user_id===user.id);if(!me)return;try{const {error}=await sb.rpc("set_player_ready",{p_room_id:room.id,p_ready:!me.is_ready});if(error)throw error;await refreshLobby();msg("readyMsg",!me.is_ready?"Tu es marqué prêt.":"Tu n’es plus marqué prêt.", "success")}catch(e){msg("readyMsg","Impossible de modifier ton statut : "+friendly(e),"error")}};
 $("saveRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord le joueur à qui attribuer ce rôle.","error");return}const name=$("roleName").value.trim(),desc=$("roleDesc").value.trim();if(!name||!desc){msg("assignMsg","Renseigne le nom du rôle et sa description.","error");return}try{const {error}=await sb.rpc("assign_role",{p_room_id:room.id,p_player_id:selectedPlayer,p_role_name:name,p_role_description:desc});if(error)throw error;msg("assignMsg","Rôle enregistré pour le joueur sélectionné.","success");renderAssignments();await renderOrganizerRoleSummary();}catch(e){msg("assignMsg",friendly(e),"error")}};
 $("clearRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord un joueur.","error");return}try{const {error}=await sb.rpc("remove_role",{p_room_id:room.id,p_player_id:selectedPlayer});if(error)throw error;$("roleName").value="";$("roleDesc").value="";$("roleCatalog").value="";msg("assignMsg","Rôle retiré.","success");renderAssignments();await renderOrganizerRoleSummary()}catch(e){msg("assignMsg",friendly(e),"error")}};
