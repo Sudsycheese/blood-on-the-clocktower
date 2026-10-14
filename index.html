@@ -408,7 +408,7 @@ async function refreshLobby(){
  if(!room||lobbyRefreshBusy)return;
  lobbyRefreshBusy=true;
  try{
- const priorStatus=lastObservedRoomStatus;
+ const priorStatus=lastObservedRoomStatus ?? room.status;
  const {data:rd,error:re}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",room.id).single();if(re)throw re;
  room=rd;
  const hasJustStarted=room.status==="started"&&priorStatus!=="started";
@@ -437,7 +437,16 @@ async function refreshLobby(){
  $("gameControlPanel").classList.toggle("hidden",!organizer||!gameStarted);
  $("playerGamePanel").classList.toggle("hidden",!gameStarted);$("playerRolePanel").classList.toggle("hidden",organizer||!gameStarted);document.body.classList.toggle("organizer-view",organizer);document.body.classList.toggle("player-started-view",!organizer&&room.status==="started");
  if(organizer){renderAssignments();await renderOrganizerRoleSummary();$("launchBtn").disabled=room.status==="started";$("launchBtn").textContent=room.status==="started"?"Partie lancée":"Lancer la partie";$("assignments").querySelectorAll("select,button").forEach(x=>x.disabled=room.status==="started");}
- else {await renderPlayerRole();$("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l'organisateur lance la partie."}
+ else {
+  await renderPlayerRole();
+  $("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l'organisateur lance la partie.";
+  if(hasJustStarted&&mode==="player"&&secretRoleData){
+   roleRevealDismissed=false;
+   showRoleReveal(secretRoleData.role_name,secretRoleData.role_description);
+   const meForReveal=players.find(p=>p.user_id===user.id);
+   lastRoleRevealKey=(meForReveal?.id||"")+"|"+secretRoleData.role_name+"|"+secretRoleData.role_description;
+  }
+}
  await refreshGameState(organizer);
  }finally{lobbyRefreshBusy=false}
 }
