@@ -1025,13 +1025,17 @@ body.player-started-view #lobbyRosterCard,
 body.player-started-view #playerLobbyScene{
  display:none!important;
 }
-body.organizer-view #lobbyInfoCard,
-body.organizer-view #lobbyRosterCard,
-body.organizer-view #playerLobbyScene{
- display:none!important;
-}
+/* Règle supprimée : ne pas masquer les informations du salon de l’organisateur. */
 
 </style>
 
 
+<style>
+/* Restauration du code et des informations du salon avant lancement. */
+body.organizer-view:not(.player-started-view) #lobbyInfoCard,
+body.organizer-view:not(.player-started-view) #lobbyRosterCard{
+ display:block!important;
+}
+body.organizer-view:not(.player-started-view) #playerLobbyScene{display:none!important;}
+</style>
 </body></html>
