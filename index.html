@@ -364,7 +364,7 @@ function playerName(id){return players.find(p=>p.id===id)?.name||"Joueur"}
 function renderNominationUI(organizer,voteCounts={},myVotes=new Set(),phase="day"){
  const select=$("nomineeSelect");const old=select.value;select.innerHTML='<option value="">Choisir un joueur</option>';
  const me=players.find(p=>p.user_id===user.id);
- players.filter(p=>p.is_alive!==false&&(!me||p.id!==me.id)).forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.name;select.append(o)});if(players.some(p=>p.id===old&&p.is_alive!==false))select.value=old;
+ players.filter(p=>p.is_alive!==false).forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.id===(me&&me.id) ? p.name+" (toi-même)" : p.name;select.append(o)});if(players.some(p=>p.id===old&&p.is_alive!==false))select.value=old;
  const org=$("organizerNominations"),pl=$("playerNominations");org.innerHTML="";pl.innerHTML="";
  const visible=[...nominations].sort((a,b)=>new Date(a.created_at||0)-new Date(b.created_at||0));
  if(!visible.length){org.textContent="Aucune nomination en cours.";pl.textContent="Aucune nomination en cours.";return}
@@ -380,7 +380,11 @@ function renderNominationUI(organizer,voteCounts={},myVotes=new Set(),phase="day
    if(n.status==="voting"||n.status==="closed"){
     const tally=voteCounts[n.id]||{yes:0,no:0};const count=document.createElement("span");count.className="vote-count";count.textContent=`Pour l’élimination : ${tally.yes} · Contre : ${tally.no}`;row.append(count);
     if(n.status==="voting"){const b=document.createElement("button");b.className="secondary";b.textContent="Clôturer ce vote";b.onclick=()=>setNominationStatus(n.id,"closed");row.append(b)}
-    else {const hint=document.createElement("p");hint.className="hint";hint.textContent="Pour éliminer quelqu’un, clique séparément sur son nom autour de la table.";row.append(hint)}
+    else {
+     const hint=document.createElement("p");hint.className="hint";hint.textContent="Vote clôturé : l’organisateur peut choisir séparément qui éliminer.";row.append(hint);
+     const target=players.find(p=>p.id===n.target_player_id);
+     if(target&&target.is_alive!==false){const eliminateBtn=document.createElement("button");eliminateBtn.className="danger";eliminateBtn.textContent="Éliminer "+target.name;eliminateBtn.title="Éliminer cette personne sans révéler son rôle";eliminateBtn.onclick=()=>eliminatePlayer(target);row.append(eliminateBtn)}
+    }
    }
   }else if(n.status==="voting"){
    if(myVotes.has(n.id)){const done=document.createElement("span");done.className="pill";done.textContent="Vote enregistré";row.append(done)}
