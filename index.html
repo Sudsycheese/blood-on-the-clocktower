@@ -280,6 +280,18 @@ body.player-lobby-waiting .player-lobby-list-card{
 body.player-lobby-waiting .player-lobby-list{overflow:visible!important;max-height:none!important}
 
 </style>
+<style>
+body.player-started-view > main > header.brand{display:none!important;}
+body.player-started-view #lobbyInfoCard,
+body.player-started-view #lobbyRosterCard,
+body.player-started-view #playerLobbyScene,
+body.player-started-view #organizerPanel,
+body.player-started-view #playerPanel,
+body.player-started-view #gameControlPanel{display:none!important;}
+body.player-started-view #playerGamePanel,
+body.player-started-view #playerRolePanel{display:block!important;}
+body.player-started-view #lobby{display:flex!important;flex-direction:column!important;gap:12px!important;}
+</style>
 </head><body><main>
 <header class="brand"><div class="logo">☾</div><div><div class="eyebrow">Une nuit · Un village · Des secrets</div><h1>Blood on the Cl<span class="clock-letter" aria-label="o"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 6v6l4 2"></path></svg></span>cktower</h1></div></header>
 <section id="home">
@@ -851,7 +863,29 @@ $("backToLobbyBtn").onclick=()=>{
 $("organizerBtn").onclick=()=>{$("organizerLogin").classList.toggle("hidden");clearMsg("homeMsg")};
 $("cancelCreate").onclick=()=>$("organizerLogin").classList.add("hidden");
 $("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;lastObservedRoomStatus=room.status;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
-$("joinBtn").onclick=async()=>{if(!ready())return;const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}try{$("joinBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});if(error)throw error;room=data;lastObservedRoomStatus=room.status;mode="player";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling()}catch(e){msg("homeMsg",friendly(e),"error")}finally{$("joinBtn").disabled=false}};
+$("joinBtn").onclick=async()=>{
+ if(!ready())return;
+ const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();
+ if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}
+ const button=$("joinBtn");button.disabled=true;clearMsg("homeMsg");
+ try{
+  await ensureUser();
+  const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});
+  if(error)throw error;
+  const joined=Array.isArray(data)?data[0]:data;
+  if(!joined||!joined.id||!joined.status)throw new Error("La fonction join_room n’a pas renvoyé de salon valide. Vérifie la fonction Supabase join_room.");
+  room=joined;lastObservedRoomStatus=room.status;mode="player";
+  localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);
+  roleRevealDismissed=false;lastRoleRevealKey=null;
+  view("lobby");
+  await refreshLobby();
+  startPolling();
+ }catch(e){
+  console.error("Échec de connexion au salon :",e);
+  view("home");
+  msg("homeMsg","Impossible de rejoindre le salon : "+friendly(e),"error");
+ }finally{button.disabled=false}
+};
 async function toggleReadyStatus(buttonId,messageId){
  if(!room||!user)return;
  const me=players.find(p=>p.user_id===user.id);
@@ -876,10 +910,15 @@ function returnHome(message=""){clearInterval(refreshTimer);refreshTimer=null;ro
 function applyPlayerGameOnlyView(){
  if(!room||room.status!=="started"||mode!=="player")return;
  document.body.classList.add("player-started-view");
- ["lobbyInfoCard","lobbyRosterCard","playerLobbyScene","organizerPanel","playerPanel","gameControlPanel"].forEach(id=>{const el=$(id);if(el){el.classList.add("hidden");el.style.display="none"}});
- ["playerGamePanel","playerRolePanel"].forEach(id=>{const el=$(id);if(el){el.classList.remove("hidden");el.style.display="block"}});
  $("home").classList.add("hidden");
  $("lobby").classList.remove("hidden");
+ const allowed=new Set(["playerGamePanel","playerRolePanel"]);
+ Array.from($("lobby").children).forEach(el=>{
+  if(allowed.has(el.id)){el.classList.remove("hidden");el.style.removeProperty("display");}
+  else {el.classList.add("hidden");el.style.setProperty("display","none","important");}
+ });
+ const brand=document.querySelector("main > header.brand");
+ if(brand)brand.style.setProperty("display","none","important");
 }
 async function closeCurrentRoom(){if(!room||!confirm("Fermer définitivement ce salon ? Tous les joueurs seront renvoyés à l’accueil."))return;try{const {error}=await sb.rpc("close_room",{p_room_id:room.id});if(error)throw error;returnHome("Salon fermé. Tu peux maintenant créer ou rejoindre une nouvelle partie.")}catch(e){msg("gameMsg",friendly(e),"error");msg("lobbyMsg",friendly(e),"error")}}
 $("endBtn").onclick=closeCurrentRoom;
@@ -889,14 +928,15 @@ $("refresh").onclick=async()=>{try{await refreshLobby();msg("lobbyMsg","Salon ac
 async function leaveRoomAsPlayer(){
  if(!room||!user){returnHome("Tu as quitté le salon.");return}
  const currentRoomId=room.id;
+ let warning="";
  try{
   const {error}=await sb.from("players").delete().eq("room_id",currentRoomId).eq("user_id",user.id);
   if(error)throw error;
-  returnHome("Tu as quitté le salon. Tu peux rejoindre une autre partie avec son code.");
  }catch(e){
   console.warn("Suppression du joueur impossible :",e);
-  returnHome("Tu as quitté cet écran. Attention : Supabase n’a pas permis de retirer ton joueur du salon ("+friendly(e)+").");
+  warning=" Tu as quitté l’interface, mais Supabase n’a pas pu retirer ton profil du salon : "+friendly(e);
  }
+ returnHome("Tu as quitté le salon. Tu peux rejoindre une autre partie avec son code."+warning);
 }
 $("leaveBtn").onclick=leaveRoomAsPlayer;
 $("sceneLeaveBtn").onclick=leaveRoomAsPlayer;
@@ -994,16 +1034,4 @@ body.organizer-view #playerLobbyScene{
 </style>
 
 
-<style>
-body.player-started-view > main > header.brand{display:none!important;}
-body.player-started-view #lobbyInfoCard,
-body.player-started-view #lobbyRosterCard,
-body.player-started-view #playerLobbyScene,
-body.player-started-view #organizerPanel,
-body.player-started-view #playerPanel,
-body.player-started-view #gameControlPanel{display:none!important;}
-body.player-started-view #playerGamePanel,
-body.player-started-view #playerRolePanel{display:block!important;}
-body.player-started-view #lobby{display:flex!important;flex-direction:column!important;gap:12px!important;}
-</style>
 </body></html>
