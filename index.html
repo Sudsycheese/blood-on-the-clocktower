@@ -78,13 +78,11 @@ main{max-width:1800px;width:100%;padding:18px 22px 34px}.brand{max-width:1280px;
 .seat{width:clamp(72px,8vw,112px);min-height:62px;padding:7px 6px;border:1px solid #b18a59;border-radius:9px;background:linear-gradient(180deg,#d4b17b 0%,#b48752 48%,#6d4834 49%,#2b2021 100%);box-shadow:0 4px 0 #120e10,0 7px 16px #000b;color:#f9ecd5}.seat:before{content:"";position:absolute;inset:3px;border:1px solid #f4d6a066;border-radius:6px;pointer-events:none}
 .seat .seat-number{color:#3c2722;background:#f1d7a0;border-radius:99px;padding:1px 5px;font-size:10px}.seat .seat-name{font-size:clamp(10px,1.1vw,14px);font-weight:800;color:#fff5e5;text-shadow:0 1px 4px #000}.seat.me{border:2px solid #f8d987;box-shadow:0 0 0 3px #d6ad6a35,0 0 25px #e3b96688,0 4px 0 #120e10}.seat .seat-you{font-size:9px;color:#ffe3a4;letter-spacing:.1em}
 #councilAlert{padding:18px;text-align:center;border:1px solid #b35e5d;border-radius:12px;background:linear-gradient(120deg,#542a30,#21191f);margin-bottom:12px}#councilAlert h2{font-size:clamp(22px,4vw,34px);letter-spacing:.2em;color:#f3d6a2}
-#playerSecretCard{background:#111014;border-color:#8c6847}.notes-card{background:#131216;border-color:#4f3c32}.notes-card h3,#playerActions h3{color:#e2bd83}
-
-
-button{background:linear-gradient(135deg,#e4c58c,#b8864e);color:#21151a;box-shadow:inset 0 1px #fff4d2}button.secondary{background:linear-gradient(135deg,#30262a,#201c20);color:#f4e5cf;border-color:#59433d;box-shadow:none}button.danger{background:linear-gradient(135deg,#7d343b,#44232a);color:#ffe8df}.footer{color:#a99889}
+#playerSecretCard{background:#111014;border-color:#8c6847}.notes-card{background:#131216;border-color:#4f3c32}.notes-card h3,#playerActions h3{color:#e2bd83}#playerActions{background:#151216;padding:14px;border:1px solid #4b3935;border-radius:12px}
+#organizerNominations .entry,#playerNominations .entry{background:#151317;border-color:#55413c}button{background:linear-gradient(135deg,#e4c58c,#b8864e);color:#21151a;box-shadow:inset 0 1px #fff4d2}button.secondary{background:linear-gradient(135deg,#30262a,#201c20);color:#f4e5cf;border-color:#59433d;box-shadow:none}button.danger{background:linear-gradient(135deg,#7d343b,#44232a);color:#ffe8df}.footer{color:#a99889}
 @media(max-width:1050px){main{padding:14px 12px 28px}#lobby{grid-template-columns:minmax(150px,.65fr) minmax(0,2fr)}#lobby>.card:first-child{grid-column:1/-1}#lobby>.card:nth-child(2){grid-column:1;grid-row:2}#playerGamePanel{grid-column:2;grid-row:2}#gameControlPanel{grid-column:1/-1;grid-row:3;position:static}.phase-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){#lobby{display:flex;flex-direction:column}#lobby>.card:first-child,#lobby>.card:nth-child(2),#organizerPanel,#playerPanel,#gameControlPanel,#playerGamePanel{width:100%;max-width:100%}#lobby>.card:nth-child(2){max-height:none;order:1}#playerGamePanel{order:2}#gameControlPanel{order:3}#organizerPanel,#playerPanel{order:2}.village-table{aspect-ratio:1/1;margin:16px auto 20px}.seat{width:clamp(59px,18vw,82px);min-height:48px;padding:5px 3px;border-radius:7px}.seat .seat-name{font-size:clamp(9px,2.7vw,12px)}.seat .seat-number{font-size:8px}.table-center{width:39%;height:31%}.clock-mark{font-size:32px}#lobby>.card:first-child{order:0}}
-body.organizer-view #playerSecretCard,body.organizer-view #showRoleDescBtn,body.organizer-view #hideRoleDescBtn,body.organizer-view .notes-card,body.organizer-view 
+body.organizer-view #playerSecretCard,body.organizer-view #showRoleDescBtn,body.organizer-view #hideRoleDescBtn,body.organizer-view .notes-card,body.organizer-view #playerActions{display:none!important}
 
 
 
@@ -153,144 +151,9 @@ body.phase-night .notes-card { display:block !important; }
 #councilAlert .council-overlay-card { border:2px solid #e34d5d; box-shadow:0 0 35px #e34d5d77; }
 #councilAlert h2 { color:#ff4d5d !important; }
 
-
-/* Animation d'élimination : guillotine de dessin animé, sans gore */
-.elimination-overlay{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:18px;background:rgba(7,5,9,.94);backdrop-filter:blur(8px);animation:elim-fade-in .25s ease-out both}
-.elimination-overlay.hidden{display:none!important}
-.elimination-card{width:min(520px,96vw);padding:25px 20px 22px;text-align:center;border:1px solid #8f6b50;border-radius:22px;background:radial-gradient(ellipse at 50% 0%,#41242b,#171219 70%);box-shadow:0 20px 70px #000b}
-.elimination-card h2{font-size:clamp(25px,6vw,38px);color:#f1d2a0;margin:8px 0}
-.elimination-card p{color:#dfcfce}
-.guillotine-scene{height:235px;position:relative;max-width:330px;margin:10px auto 16px;overflow:hidden}
-.guillotine-frame{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:190px;height:205px;border-left:13px solid #b38b60;border-right:13px solid #b38b60;border-top:13px solid #d6ad78;border-radius:5px 5px 0 0;filter:drop-shadow(0 7px 5px #0008)}
-.guillotine-frame:after{content:"";position:absolute;left:-28px;right:-28px;bottom:0;height:14px;background:#8b6045;border-radius:3px}
-.guillotine-slot{position:absolute;left:50%;top:21px;transform:translateX(-50%);width:140px;height:10px;background:#0a080c;border-radius:2px}
-.guillotine-blade{position:absolute;z-index:3;left:50%;top:25px;transform:translateX(-50%);width:142px;height:18px;background:linear-gradient(180deg,#f7f1e7,#8d9aa3);clip-path:polygon(0 0,100% 0,55% 100%,45% 100%);filter:drop-shadow(0 3px 3px #0009)}
-.elimination-overlay:not(.hidden) .guillotine-blade{animation:blade-drop .8s .8s cubic-bezier(.55,.05,.85,.35) both}
-.cartoon-person{position:absolute;z-index:2;left:50%;bottom:18px;transform:translateX(-50%);width:74px;height:100px}
-.cartoon-head{position:absolute;left:17px;top:0;width:42px;height:42px;border:3px solid #f3d5a3;border-radius:50%;background:#ffe5b8;color:#49302c;font:24px/36px system-ui,sans-serif;box-shadow:0 4px 10px #0006}
-.cartoon-body{position:absolute;left:21px;top:43px;width:34px;height:48px;border-radius:15px 15px 5px 5px;background:linear-gradient(135deg,#8ed8b3,#397a68);border:2px solid #c4ead7}
-.cartoon-person:before,.cartoon-person:after{content:"";position:absolute;top:48px;width:13px;height:43px;background:#397a68;border-radius:9px;transform-origin:top}
-.cartoon-person:before{left:14px;transform:rotate(28deg)}.cartoon-person:after{right:6px;transform:rotate(-28deg)}
-.elimination-overlay:not(.hidden) .cartoon-head{animation:head-pop .65s 1.5s ease-in both}
-.elimination-caption{font-weight:800;letter-spacing:.04em;color:#f0d4a3!important}
-@keyframes elim-fade-in{from{opacity:0}to{opacity:1}}
-@keyframes blade-drop{0%{top:25px}70%{top:145px}82%{top:132px}100%{top:145px}}
-@keyframes head-pop{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(58px,23px) rotate(150deg);opacity:1}}
-@media(prefers-reduced-motion:reduce){.elimination-overlay *{animation:none!important}}
-
-
-/* Lobby visuel joueur : scène de table dynamique, l'organisateur garde son interface habituelle */
-.player-lobby-scene{grid-column:1/-1;position:relative;min-height:calc(100vh - 170px);margin:0;overflow:hidden;border:1px solid #61442d;border-radius:18px;background:radial-gradient(ellipse at 50% 50%,#28212a 0%,#121117 58%,#08090d 100%);box-shadow:0 18px 55px #0009;color:#f7e8ce}
-.player-lobby-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;background:linear-gradient(180deg,#0a0b10f5,#101016e8);border-bottom:1px solid #6c4b31;flex-wrap:wrap}
-.brand-lockup{display:flex;align-items:center;gap:12px}.brand-mark{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1px solid #b78a54;color:#eac68c;font-size:28px;background:radial-gradient(circle,#38242a,#101016)}.brand-title{font:700 clamp(18px,2.3vw,29px) Georgia,serif;color:#f1d3a0}.brand-subtitle{font:14px Georgia,serif;color:#b9a38d}
-.lobby-count,.lobby-code{padding:9px 16px;border:1px solid #4f3b32;border-radius:12px;background:#0d0d13d9;text-align:center}.lobby-count span,.lobby-code span{display:block;color:#bba88e;font-size:12px}.lobby-count strong,.lobby-code strong{display:block;color:#f3d9a8;font:700 18px Georgia,serif;margin-top:3px}
-.scene-stage{position:relative;min-height:470px;height:min(66vh,720px);display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#5c351f26,#090a0f00 62%),linear-gradient(180deg,#10101755,#09090eaa)}
-.scene-ambient{position:absolute;inset:0;background:radial-gradient(ellipse at 8% 45%,#a75e251e,transparent 28%),radial-gradient(ellipse at 92% 45%,#a75e251e,transparent 28%),repeating-linear-gradient(0deg,#ffffff03 0 1px,transparent 1px 70px);pointer-events:none}
-.scene-table{position:relative;width:min(58vw,610px);min-width:310px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 45%,#72452a 0%,#4b2b1e 48%,#281a19 68%,#171319 70%,#100e13 73%);border:9px double #946640;box-shadow:0 0 0 8px #2b1c1b,0 0 0 10px #8d5e36,0 24px 60px #000b,inset 0 0 35px #09070a}
-.scene-table:before{content:"";position:absolute;inset:7%;border-radius:50%;border:2px solid #c0935b77;box-shadow:inset 0 0 0 12px #21151244,inset 0 0 0 14px #c0935b30}
-.scene-table-ring{position:absolute;inset:17%;border-radius:50%;border:1px solid #d5a56966;box-shadow:0 0 0 1px #140e0b,inset 0 0 40px #170f13}
-.scene-table-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;background:radial-gradient(circle,#4d3030,#241a20 72%);border:2px solid #bb8b51;box-shadow:0 0 0 8px #9a6b3925,0 0 40px #0009;padding:10px}
-.scene-table-center span{font-size:clamp(35px,5vw,62px);color:#d9a75d;text-shadow:0 0 18px #e9a04b55}.scene-table-center strong{font:700 clamp(8px,1.1vw,13px) Georgia,serif;letter-spacing:.12em;color:#f1d3a0}.scene-table-center small{font-size:9px;letter-spacing:.15em;color:#bda181}
-.scene-chairs{position:absolute;inset:0}.scene-seat{position:absolute;transform:translate(-50%,-50%);width:clamp(58px,7.4vw,94px);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:2}
-.scene-chair{width:70%;aspect-ratio:.8;border-radius:12px 12px 18px 18px;border:2px solid #a77847;background:linear-gradient(135deg,#6b2c2d,#35171d 68%,#1a1016);box-shadow:inset 0 0 0 3px #160e12,0 8px 13px #0009;position:relative}
-.scene-chair:before{content:"";position:absolute;left:9%;right:9%;top:7%;bottom:7%;border:1px solid #d2a15e66;border-radius:8px}.scene-chair:after{content:"✦";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:clamp(12px,1.7vw,20px);color:#c58a4d88}
-.scene-seat-name{max-width:140%;padding:5px 9px;border:1px solid #8b6b99;border-radius:9px;background:#0c0b13ee;color:#fff0d2;font:700 clamp(10px,1.15vw,14px) Georgia,serif;text-align:center;white-space:nowrap;box-shadow:0 3px 12px #0009}
-.scene-seat-number{display:inline-grid;place-items:center;min-width:18px;height:18px;margin-right:5px;border:1px solid #51425d;border-radius:5px;color:#e7c98f;font:700 10px system-ui,sans-serif}
-.scene-seat.me .scene-seat-name{border-color:#e7c58b;box-shadow:0 0 13px #e7c58b44}.scene-seat.ready .scene-seat-name:after{content:" ✓";color:#8ce2bd}.scene-seat.dead .scene-chair{filter:grayscale(.9);opacity:.45}.scene-seat.dead .scene-seat-name{text-decoration:line-through;opacity:.65}
-.player-lobby-bottom{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 22px;background:linear-gradient(180deg,#101016e8,#090a0ff5);border-top:1px solid #65472f;flex-wrap:wrap}
-.scene-status{display:flex;align-items:center;gap:10px}.status-dot{width:10px;height:10px;border-radius:50%;background:#76d5a5;box-shadow:0 0 12px #76d5a566}.scene-status strong,.scene-status small{display:block}.scene-status strong{color:#f0d7ab}.scene-status small{font-size:12px;color:#ad9b89;margin-top:3px}
-.scene-ready-btn{border:1px solid #d7a65f;border-radius:12px;padding:13px 24px;background:linear-gradient(135deg,#e4c58c,#ad7744);color:#21151a;font-weight:800;box-shadow:0 0 24px #d5a25a33}.scene-ready-btn.is-ready{background:linear-gradient(135deg,#8fe2bd,#3a8e75);border-color:#a8f0d2}
-.scene-leave-btn{background:#21171b;border:1px solid #71434a;color:#f2b8b5;border-radius:10px;padding:10px 14px}
-.scene-footnote{text-align:center;color:#a8947e;font-size:12px;padding:0 12px 13px;margin:0}
-@media(max-width:700px){.player-lobby-scene{min-height:calc(100vh - 130px)}.player-lobby-top{padding:13px;gap:10px}.brand-lockup{width:100%}.lobby-count,.lobby-code{flex:1;min-width:0}.scene-stage{height:56vh;min-height:390px}.scene-table{width:min(76vw,470px);min-width:270px}.scene-seat{width:clamp(48px,12vw,72px)}.scene-seat-name{padding:4px 5px;font-size:clamp(8px,2.5vw,11px)}.scene-chair{width:68%;border-radius:8px 8px 13px 13px}.scene-seat-number{min-width:15px;height:15px;font-size:8px;margin-right:2px}.player-lobby-bottom{padding:12px;gap:9px}.scene-ready-btn{padding:11px 13px}.scene-status{flex:1;min-width:150px}.scene-footnote{font-size:11px}}
-
-
-/* Sièges dynamiques superposés au décor de table */
-.dynamic-seat{position:absolute!important;z-index:7!important;transform:translate(-50%,-50%)!important;width:clamp(64px,12vw,104px);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
-.dynamic-chair{position:relative;width:35px;height:35px;border:2px solid #b88753;border-radius:10px 10px 13px 13px;background:linear-gradient(145deg,#733b38,#26151b);box-shadow:inset 0 0 0 3px #160e12,0 4px 12px #000b}
-.dynamic-chair:before{content:"";position:absolute;left:17%;right:17%;top:16%;height:42%;border:2px solid #d1a16a88;border-radius:5px 5px 2px 2px;background:#31191c}
-.dynamic-chair:after{content:"";position:absolute;left:12%;right:12%;bottom:13%;height:28%;border:2px solid #b88753;border-radius:4px;background:linear-gradient(135deg,#5c282b,#29151a)}
-.dynamic-seat.me .dynamic-chair{border-color:#f1d18b;box-shadow:0 0 12px #e9bd6888,inset 0 0 0 3px #160e12}
-.dynamic-seat.dead .dynamic-chair{filter:grayscale(1);opacity:.45}
-.dynamic-seat .seat-name-only{pointer-events:auto!important;position:static!important;transform:none!important;max-width:100%!important;white-space:normal!important;font-size:clamp(9px,2.3vw,13px)!important;padding:3px 6px!important;line-height:1.1!important}
-.dynamic-seat .seat-name-only.eliminable{cursor:pointer!important}
-.phase-counter{display:inline-block;margin:8px 0 12px;padding:7px 13px;border:1px solid #a87e50;border-radius:999px;background:#211820;color:#f2d5a3;font-weight:800;letter-spacing:.04em}
-.game-announcement-overlay{position:fixed;inset:0;z-index:15000;display:grid;place-items:center;padding:20px;background:#05040bee;backdrop-filter:blur(8px)}
-.game-announcement-overlay.hidden{display:none!important}
-.game-announcement-card{width:min(480px,95vw);padding:28px 22px;text-align:center;border:1px solid #b58a58;border-radius:20px;background:radial-gradient(ellipse at top,#442b30,#141117 75%);box-shadow:0 20px 70px #000b}
-.game-announcement-card h2{font:700 clamp(25px,6vw,38px) Georgia,serif;color:#f5d49b;margin:12px 0}
-.game-announcement-card p{color:#e6d4c1;line-height:1.55}
-.announcement-sigil{font-size:58px;color:#e4bd7d;text-shadow:0 0 20px #d9a65b55}
-@media(max-width:650px){.dynamic-seat{width:clamp(47px,13vw,68px);gap:3px}.dynamic-chair{width:27px;height:27px;border-radius:7px}.dynamic-seat .seat-name-only{font-size:clamp(8px,2.5vw,11px)!important;padding:3px 4px!important;max-width:125%!important}.phase-counter{font-size:13px}}
-
-
-/* Lobby joueur compact : une seule carte, liste et bouton prêt, sans table ni ancienne fiche */
-.player-lobby-scene .scene-stage{height:auto!important;min-height:0!important;padding:0!important;background:transparent!important}
-.player-lobby-scene .scene-ambient,.player-lobby-scene .scene-table{display:none!important}
-.player-lobby-list-card{width:100%;padding:18px;border:1px solid #806044;border-radius:16px;background:linear-gradient(145deg,#1b1720,#100e14);box-shadow:0 12px 36px #0007}
-.player-lobby-list-heading{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid #5e4938}
-.player-lobby-list-icon{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #b18a59;border-radius:50%;background:radial-gradient(circle,#4c3033,#17121a);font-size:23px;color:#e1bd82}
-.player-lobby-list-heading h2{margin:0;color:#f0d2a0;font:700 22px Georgia,serif}
-.player-lobby-list-heading p{margin:4px 0 0;color:#bba998;font-size:13px}
-.player-lobby-list{display:grid;gap:8px;margin:14px 0}
-.player-lobby-person{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid #403039;border-radius:10px;background:#100e14}
-.player-lobby-person-name{min-width:0;overflow-wrap:anywhere;color:#f0e3d1;font-weight:600}
-.player-lobby-person-status{flex:0 0 auto;font-size:12px;font-weight:700}
-.player-lobby-person-status.ready{color:#9ed9a4}
-.player-lobby-person-status.waiting{color:#d0ad78}
-.player-lobby-empty{padding:16px 10px;text-align:center;color:#bba998}
-.player-lobby-ready-summary{padding-top:12px;border-top:1px solid #5e4938;color:#e8c895;font-size:14px}
-.player-lobby-scene .personal-secret,.player-lobby-scene #personalSecret,.player-lobby-scene .secret-role-card{display:none!important}
-@media(max-width:650px){.player-lobby-list-card{padding:14px}.player-lobby-list-heading h2{font-size:20px}.player-lobby-person{padding:9px 10px}}
-
-
-body.player-lobby-waiting{overflow-y:auto!important;overflow-x:hidden!important}
-body.player-lobby-waiting #personalSecret,
-body.player-lobby-waiting .personal-secret,
-body.player-lobby-waiting .secret-role-card,
-body.player-lobby-waiting [data-panel="personal-secret"]{display:none!important}
-body.player-lobby-waiting .player-lobby-scene{min-height:0!important;height:auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
-body.player-lobby-waiting .player-lobby-scene .scene-stage{flex:0 0 auto!important}
-body.player-lobby-waiting .player-lobby-scene .player-lobby-list-card{max-height:none!important;overflow:visible!important}
-
-
-body.player-lobby-waiting .role-card,
-body.player-lobby-waiting .my-role,
-body.player-lobby-waiting #rolePanel,
-body.player-lobby-waiting #playerSecretCard{display:none!important}
-
-body.player-lobby-waiting,body.player-lobby-waiting #app{min-height:100%;height:auto!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}
-
-/* Correctif robuste : le lobby joueur reste défilable sur mobile */
-html:has(body.player-lobby-waiting),
-body.player-lobby-waiting{
- height:auto!important;min-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;
- position:static!important;touch-action:pan-y!important;overscroll-behavior-y:auto!important
-}
-body.player-lobby-waiting #app,
-body.player-lobby-waiting main,
-body.player-lobby-waiting .app,
-body.player-lobby-waiting .player-lobby-scene{
- height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
- position:relative!important;touch-action:pan-y!important
-}
-body.player-lobby-waiting .player-lobby-list-card{
- max-height:none!important;height:auto!important;overflow:visible!important;touch-action:pan-y!important
-}
-body.player-lobby-waiting .player-lobby-list{overflow:visible!important;max-height:none!important}
-
-</style>
-<style>
-body.player-started-view > main > header.brand{display:none!important;}
-body.player-started-view #lobbyInfoCard,
-body.player-started-view #lobbyRosterCard,
-body.player-started-view #playerLobbyScene,
-body.player-started-view #organizerPanel,
-body.player-started-view #playerPanel,
-body.player-started-view #gameControlPanel{display:none!important;}
-body.player-started-view #playerGamePanel,
-body.player-started-view #playerRolePanel{display:block!important;}
-body.player-started-view #lobby{display:flex!important;flex-direction:column!important;gap:12px!important;}
+.player-seat-help{display:none}
+body.player-started-view .player-seat-help{display:block;color:#d6ad6a;font-size:12px;text-align:center;margin:4px 0 8px}
+body.player-started-view #lobbyRosterCard{display:block}
 </style>
 </head><body><main>
 <header class="brand"><div class="logo">☾</div><div><div class="eyebrow">Une nuit · Un village · Des secrets</div><h1>Blood on the Cl<span class="clock-letter" aria-label="o"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M12 6v6l4 2"></path></svg></span>cktower</h1></div></header>
@@ -306,51 +169,13 @@ body.player-started-view #lobby{display:flex!important;flex-direction:column!imp
 <section id="lobby" class="hidden">
 <div id="lobbyInfoCard" class="card"><div class="eyebrow" id="modeLabel">Salon</div><h2 id="roomHeading">Salle d'attente</h2><p>Code à transmettre aux joueurs :</p><div class="rolename" id="roomCodeDisplay" style="letter-spacing:.12em"></div><div class="actions"><button class="secondary" id="copyCode">Copier le code</button><button class="secondary" id="refresh">Actualiser</button></div><div id="lobbyMsg" class="notice hidden"></div></div>
 <div id="lobbyRosterCard" class="card"><h2>Joueurs dans le salon</h2><p>La liste se met à jour automatiquement.</p><div id="playerRoster" class="list"></div></div>
-<div id="playerLobbyScene" class="player-lobby-scene hidden">
- <div class="player-lobby-top">
-  <div class="brand-lockup"><div class="brand-mark">♜</div><div><div class="brand-title">Blood on the Clocktower</div><div class="brand-subtitle">Le village des secrets</div></div></div>
-  <div class="lobby-count"><span id="sceneRoomTitle">Salle d’attente</span><strong><span id="scenePlayerCount">0</span> joueurs</strong></div>
-  <div class="lobby-code"><span>Code de la partie</span><strong id="sceneRoomCode">———</strong></div>
- </div>
- <div class="scene-stage">
-  <div class="player-lobby-list-card">
-   <div class="player-lobby-list-heading">
-    <span class="player-lobby-list-icon" aria-hidden="true">☾</span>
-    <div><h2>Joueurs du salon</h2><p id="sceneReadyText">En attente des autres joueurs…</p></div>
-   </div>
-   <div id="scenePlayerList" class="player-lobby-list"></div>
-   <div class="player-lobby-ready-summary"><strong id="sceneReadyCount">0 / 0 joueurs prêts</strong></div>
-  </div>
- </div>
- <div class="player-lobby-bottom">
-  <div class="scene-status"><span class="status-dot"></span><div><strong id="sceneReadyCount">0 / 0 joueurs prêts</strong><small id="sceneReadyText">En attente des autres joueurs…</small></div></div>
-  <button id="sceneReadyBtn" class="scene-ready-btn" type="button">✦ Je suis prêt</button>
-  <div id="sceneReadyMsg" class="notice hidden" aria-live="polite"></div>
-  <button id="sceneLeaveBtn" class="scene-leave-btn" type="button">Quitter le salon</button>
- </div>
- <p class="scene-footnote">La partie commencera lorsque l’organisateur sera prêt. Garde ton rôle secret.</p>
-</div>
- <div id="organizerPanel" class="card hidden"><h2>Attribuer les rôles</h2><p>Choisis manuellement le rôle de chaque joueur. Seul l'organisateur voit les attributions avant le lancement.</p><div id="organizerRoleSummaryBefore" class="notice hidden"></div><div id="assignments" class="list"></div><label for="roleCatalog">Choisir un rôle dans le catalogue</label><select id="roleCatalog"><option value="">— Choisir un rôle —</option><optgroup label="Démon"><option value="Diablotin">Diablotin</option></optgroup><optgroup label="Sbires"><option value="Baron">Baron</option><option value="Empoisonneur">Empoisonneur</option><option value="Espion">Espion</option><option value="Femme Écarlate">Femme Écarlate</option></optgroup><optgroup label="Citadins"><option value="Archiviste">Archiviste</option><option value="Croque-mort">Croque-mort</option><option value="Cuistot">Cuistot</option><option value="Empathe">Empathe</option><option value="Enquêteur">Enquêteur</option><option value="Fossoyeur">Fossoyeur</option><option value="Lavandière">Lavandière</option><option value="Maire">Maire</option><option value="Moine">Moine</option><option value="Pourfendeur">Pourfendeur</option><option value="Soldat">Soldat</option><option value="Vierge">Vierge</option><option value="Voyante">Voyante</option></optgroup><optgroup label="Étrangers"><option value="Ivrogne">Ivrogne</option><option value="Majordome">Majordome</option><option value="Reclus">Reclus</option><option value="Saint">Saint</option></optgroup></select><p class="hint">Catalogue des 22 rôles du document Fukano — Trouble Brewing. Sélectionne un rôle pour préremplir sa description, que tu peux modifier avant de l’attribuer.</p><label for="roleName">Nom du rôle</label><input id="roleName" maxlength="80" placeholder="Ex. Médecin"><label for="roleDesc">Description / pouvoirs</label><textarea id="roleDesc" maxlength="4000" placeholder="Explique ce que le joueur doit faire, ses pouvoirs et ses limites."></textarea><div class="actions"><button id="saveRole">Enregistrer le rôle choisi</button><button class="secondary" id="clearRole">Retirer le rôle</button></div><div id="assignMsg" class="notice hidden"></div><div class="actions"><button id="launchBtn">Lancer la partie</button><button class="danger" id="endBtn">Fermer le salon</button></div></div>
+ <div id="organizerPanel" class="card hidden"><h2>Attribuer les rôles</h2><p>Choisis manuellement le rôle de chaque joueur. Seul l'organisateur voit les attributions avant le lancement.</p><div id="assignments" class="list"></div><label for="roleCatalog">Choisir un rôle dans le catalogue</label><select id="roleCatalog"><option value="">— Choisir un rôle —</option><optgroup label="Démon"><option value="Diablotin">Diablotin</option></optgroup><optgroup label="Sbires"><option value="Baron">Baron</option><option value="Empoisonneur">Empoisonneur</option><option value="Espion">Espion</option><option value="Femme Écarlate">Femme Écarlate</option></optgroup><optgroup label="Citadins"><option value="Archiviste">Archiviste</option><option value="Croque-mort">Croque-mort</option><option value="Cuistot">Cuistot</option><option value="Empathe">Empathe</option><option value="Enquêteur">Enquêteur</option><option value="Fossoyeur">Fossoyeur</option><option value="Lavandière">Lavandière</option><option value="Maire">Maire</option><option value="Moine">Moine</option><option value="Pourfendeur">Pourfendeur</option><option value="Soldat">Soldat</option><option value="Vierge">Vierge</option><option value="Voyante">Voyante</option></optgroup><optgroup label="Étrangers"><option value="Ivrogne">Ivrogne</option><option value="Majordome">Majordome</option><option value="Reclus">Reclus</option><option value="Saint">Saint</option></optgroup></select><p class="hint">Catalogue des 22 rôles du document Fukano — Trouble Brewing. Sélectionne un rôle pour préremplir sa description, que tu peux modifier avant de l’attribuer.</p><label for="roleName">Nom du rôle</label><input id="roleName" maxlength="80" placeholder="Ex. Médecin"><label for="roleDesc">Description / pouvoirs</label><textarea id="roleDesc" maxlength="4000" placeholder="Explique ce que le joueur doit faire, ses pouvoirs et ses limites."></textarea><div class="actions"><button id="saveRole">Enregistrer le rôle choisi</button><button class="secondary" id="clearRole">Retirer le rôle</button></div><div id="assignMsg" class="notice hidden"></div><div class="actions"><button id="launchBtn">Lancer la partie</button><button class="danger" id="endBtn">Fermer le salon</button></div></div>
 <div id="playerPanel" class="card hidden"><h2>Tu as rejoint la partie</h2><p id="waitText">Tu es dans le salon. Attends que l’organisateur lance la partie.</p><button id="readyBtn" class="secondary" type="button">Je suis prêt</button><div id="readyMsg" class="notice hidden"></div><div id="myRole" class="rolebox hidden"><div class="eyebrow">Ta fiche personnelle — ne la montre pas</div><div id="myRoleName" class="rolename"></div><div id="myRoleDesc" class="desc"></div></div><button id="leaveBtn" class="secondary" style="margin-top:14px">Quitter cet écran</button></div>
-<div id="gameControlPanel" class="card hidden"><div class="eyebrow">Espace privé</div><h2>Commandes de l’organisateur</h2><p>Les commandes de conduite de partie sont réservées à l’organisateur.</p><div class="phase-pill" id="phaseStatus">Phase : attente</div>
-<div id="organizerPhaseCounter" class="phase-counter">Jour 1</div><div id="organizerNightAction" class="notice hidden" style="margin-top:12px"></div><div class="notice" style="display:block;margin-top:10px">La table affiche les joueurs en vie et éliminés. Pendant la nuit, le Diablotin peut transmettre un seul choix à l’organisateur. Son rôle reste secret lors d’une élimination.</div><div class="phase-controls"><button id="nightBtn" class="secondary">☾ Lancer la nuit</button><button id="dayBtn" class="secondary">☀ Lancer le jour</button><button id="callCouncilBtn">🔔 Appeler le conseil</button><button id="endCouncilBtn" class="secondary">Terminer le conseil</button></div><div id="gameMsg" class="notice hidden"></div><p class="hint">Pour éliminer un joueur après les nominations et les votes, clique sur son nom autour de la table. Son rôle ne sera pas révélé.</p><h3>Récapitulatif secret des rôles</h3><p class="hint">Visible uniquement pour l’organisateur.</p><div id="organizerRoleSummaryAfter" class="list"></div><div class="actions" style="margin-top:18px;padding-top:14px;border-top:1px solid #765239"><button id="endGameRoomBtn" class="danger" type="button">⚑ Fermer le salon</button></div></div>
-<div id="playerGamePanel" class="card hidden"><div class="phase-pill" id="playerPhasePill">Phase : jour</div>
-<div id="phaseCounter" class="phase-counter" aria-live="polite">Jour 1</div><h2>Place du village</h2><p id="playerPhaseText">En attente de l’organisateur.</p><div class="table-wrap"><div class="village-table"><div id="villageSeats" class="village-seats"></div></div></div></div>
-<div id="playerRolePanel" class="card hidden"><div class="eyebrow">Espace personnel</div><h2>Ma fiche secrète</h2><p>Ton rôle reste visible. Sa description est consultable uniquement pendant la nuit.</p><div class="actions"><button id="showRoleDescBtn" class="secondary">Relire la description (nuit)</button><button id="hideRoleDescBtn" class="secondary">Masquer la description</button></div><div id="playerSecretCard" class="rolebox hidden"><div class="eyebrow">Ton rôle</div><div id="playerSecretRoleName" class="rolename"></div><div id="playerSecretRoleDesc" class="desc"></div></div><div id="demonNightAction" class="card hidden"><h3>Choix du Diablotin — nuit</h3><p>Choisis une personne encore en vie. Tu peux aussi te choisir toi-même. Un seul choix est autorisé par nuit.</p><label for="demonTargetSelect">Qui veux-tu éliminer ?</label><select id="demonTargetSelect"><option value="">Choisir un joueur vivant</option></select><button id="submitDemonTarget" type="button">Confirmer mon choix</button><div id="demonActionMsg" class="notice hidden"></div></div><div class="card notes-card"><h3>Mon bloc-notes personnel</h3><p>Ces notes restent enregistrées sur cet appareil et ne sont pas partagées avec les autres joueurs.</p><textarea id="privateNotes" placeholder="Indices, soupçons, informations à retenir…"></textarea><div class="hint" id="notesStatus">Notes enregistrées sur cet appareil.</div></div>
+<div id="gameControlPanel" class="card hidden"><div class="eyebrow">Espace privé</div><h2>Commandes de l’organisateur</h2><p>Les commandes de conduite de partie sont réservées à l’organisateur.</p><div class="phase-pill" id="phaseStatus">Phase : attente</div><div class="notice" style="display:block;margin-top:10px">Important : une nomination ouvre un vote, elle n’élimine personne. Traite les nominations dans l’ordre, clôture chaque vote, puis clique toi-même sur le nom du joueur à éliminer. Son rôle restera secret.</div><div class="phase-controls"><button id="nightBtn" class="secondary">☾ Lancer la nuit</button><button id="dayBtn" class="secondary">☀ Lancer le jour</button><button id="callCouncilBtn">🔔 Appeler le conseil</button><button id="endCouncilBtn" class="secondary">Terminer le conseil</button></div><div id="gameMsg" class="notice hidden"></div><p class="hint">Pour éliminer un joueur après les nominations et les votes, clique sur son nom autour de la table. Son rôle ne sera pas révélé.</p><h3>File des nominations et votes</h3><p class="hint">Une seule nomination peut être en vote à la fois. La clôture du vote ne tue jamais automatiquement le joueur.</p><div id="organizerNominations" class="list"></div><div class="actions" style="margin-top:18px;padding-top:14px;border-top:1px solid #765239"><button id="endGameRoomBtn" class="danger" type="button">⚑ Fermer le salon</button></div></div>
+<div id="playerGamePanel" class="card hidden"><div class="phase-pill" id="playerPhasePill">Phase : jour</div><h2>Place du village</h2><p id="playerPhaseText">En attente de l’organisateur.</p><p class="player-seat-help">Les places suivent le même ordre pour tous les joueurs. Ton pseudo est entouré d’une bordure dorée.</p><div class="table-wrap"><div class="village-table"><div id="villageSeats" class="village-seats"></div></div></div></div>
+<div id="playerRolePanel" class="card hidden"><div class="eyebrow">Espace personnel</div><h2>Ma fiche secrète</h2><p>Ton rôle reste visible. Sa description est consultable uniquement pendant la nuit.</p><div class="actions"><button id="showRoleDescBtn" class="secondary">Relire la description (nuit)</button><button id="hideRoleDescBtn" class="secondary">Masquer la description</button></div><div id="playerSecretCard" class="rolebox hidden"><div class="eyebrow">Ton rôle</div><div id="playerSecretRoleName" class="rolename"></div><div id="playerSecretRoleDesc" class="desc"></div></div><div class="card notes-card"><h3>Mon bloc-notes personnel</h3><p>Ces notes restent enregistrées sur cet appareil et ne sont pas partagées avec les autres joueurs.</p><textarea id="privateNotes" placeholder="Indices, soupçons, informations à retenir…"></textarea><div class="hint" id="notesStatus">Notes enregistrées sur cet appareil.</div></div><div id="playerActions" class="player-actions"><h3>Nomination</h3><label for="nomineeSelect">Qui souhaites-tu nominer ?</label><select id="nomineeSelect"><option value="">Choisir un joueur</option></select><div class="actions"><button id="nominateBtn">Proposer une nomination</button></div><div id="nominationMsg" class="notice hidden"></div><h3>Nominations et votes en cours</h3><p class="hint">Une nomination sert uniquement à ouvrir un vote. Elle ne provoque aucune élimination.</p><div id="playerNominations" class="list"></div></div></div>
 <div id="councilAlert" class="council-overlay hidden" role="status" aria-live="assertive"><div class="council-overlay-card"><div class="council-alert-icon">⚠</div><h2>CONSEIL</h2><p>CONSEIL : rejoignez la table maintenant.</p></div></div>
 </section>
-<div id="eliminationOverlay" class="elimination-overlay hidden" role="alertdialog" aria-modal="true" aria-labelledby="eliminationTitle">
- <div class="elimination-card">
-  <div class="eyebrow">Le village a rendu son verdict</div>
-  <div class="guillotine-scene" aria-hidden="true">
-   <div class="guillotine-frame"></div><div class="guillotine-slot"></div><div class="guillotine-blade"></div>
-   <div class="cartoon-person"><div class="cartoon-head">☺</div><div class="cartoon-body"></div></div>
-  </div>
-  <h2 id="eliminationTitle">Tu es éliminé !</h2>
-  <p class="elimination-caption">Ton aventure continue… mais tu es désormais un esprit du village.</p>
-  <button id="dismissElimination" type="button">Continuer</button>
- </div>
-</div>
 <section id="roleReveal" class="role-reveal-page hidden" aria-live="polite">
  <div id="revealStage" class="reveal-stage unknown">
   <div class="reveal-kicker">La partie commence</div>
@@ -365,15 +190,13 @@ body.player-started-view #lobby{display:flex!important;flex-direction:column!imp
 </section>
 <div class="footer">Les rôles ne sont accessibles aux joueurs qu'après le lancement. Ne partage pas les codes de gestion.</div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<div id="gameAnnouncementOverlay" class="game-announcement-overlay hidden" role="alertdialog" aria-modal="true"><div class="game-announcement-card"><div class="announcement-sigil">☼</div><h2 id="gameAnnouncementTitle">Les Citadins ont gagné !</h2><p id="gameAnnouncementText">La partie est terminée.</p><button id="dismissGameAnnouncement" type="button">Continuer</button></div></div>
-<div id="successionOverlay" class="game-announcement-overlay hidden" role="alertdialog" aria-modal="true"><div class="game-announcement-card"><div class="announcement-sigil">♜</div><h2>Tu es le nouveau Diablotin</h2><p>La Femme Écarlate a pris la place du Diablotin. Ton nouveau rôle est révélé uniquement pendant la nuit.</p><button id="dismissSuccession" type="button">Continuer</button></div></div>
 <script>
 const SUPABASE_URL="https://wajaawmpkbqsfxffojfu.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_1YPTK7Ehsm7fPfcsAJ-lAg_Aoc5SbBS";
 const $=id=>document.getElementById(id);
-let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, councilAlertTimer=null, nominations=[], secretRoleData=null, currentPhase="day", lastOwnAliveState=null, eliminationOverlayTimer=null, lastObservedRoomStatus=null, lobbyRefreshBusy=false;
-function msg(id,text,kind=""){const el=$(id);if(!el){console.warn("Zone de message absente :",id,text);return}el.textContent=text;el.className="notice"+(kind?" "+kind:"");el.classList.remove("hidden")}
-function clearMsg(id){const el=$(id);if(el)el.classList.add("hidden")}
+let sb=null, user=null, mode=null, room=null, players=[], selectedPlayer=null, refreshTimer=null, roleRevealDismissed=false, lastRoleRevealKey=null, seenCouncilAt=null, councilAlertTimer=null, nominations=[], secretRoleData=null, currentPhase="day";
+function msg(id,text,kind=""){const el=$(id);el.textContent=text;el.className="notice"+(kind?" "+kind:"");el.classList.remove("hidden")}
+function clearMsg(id){$(id).classList.add("hidden")}
 function view(id){["home","lobby"].forEach(x=>$(x).classList.toggle("hidden",x!==id));if(id!=="lobby")$("roleReveal").classList.add("hidden")}
 function campForRole(roleName){
  const name=(roleName||"").trim().toLocaleLowerCase("fr");
@@ -392,205 +215,34 @@ function showRoleReveal(roleName,description){
 function ready(){if(!window.supabase){msg("homeMsg","Impossible de charger la bibliothèque réseau. Vérifie ta connexion.");return false}if(SUPABASE_URL.startsWith("COLLE_")||SUPABASE_ANON_KEY.startsWith("COLLE_")){msg("homeMsg","Le site n'est pas encore configuré : il faut ajouter l'URL et la clé publique Supabase dans index.html, puis publier le site.");return false}if(!sb)sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);return true}
 async function ensureUser(){let {data,error}=await sb.auth.getSession();if(error)throw error;if(data.session){user=data.session.user;return user}let r=await sb.auth.signInAnonymously();if(r.error)throw r.error;user=r.data.user;return user}
 function friendly(e){return e?.message||String(e||"Erreur inconnue")}
-async function loadRoom(roomId){const {data,error}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",roomId).single();if(error)throw error;room=data;await refreshLobby()}
-function updatePlayerLobbyCompact(){
- const isWaiting=!!room&&room.status!=="started"&&mode==="player";
- document.body.classList.toggle("player-lobby-waiting",isWaiting);
- if(isWaiting){
-  document.documentElement.style.removeProperty("overflow");
-  document.documentElement.style.removeProperty("height");
-  document.body.style.removeProperty("overflow");
-  document.body.style.removeProperty("height");
-  document.body.style.removeProperty("position");
- }
- const list=$("scenePlayerList");
- if(list){
-  const roster=Array.isArray(players)?players:[];
-  list.innerHTML=roster.length?roster.map(p=>{
-   const ready=!!p.is_ready;
-   const name=escapeHtml(p.name||"Joueur");
-   return `<div class="player-lobby-person"><span class="player-lobby-person-name">${name}</span><span class="player-lobby-person-status ${ready?"ready":"waiting"}">${ready?"✓ Prêt":"En attente"}</span></div>`;
-  }).join(""):'<div class="player-lobby-empty">Aucun joueur pour le moment.</div>';
- }
- const readyCount=Array.isArray(players)?players.filter(p=>p.is_ready).length:0;
- if($("sceneReadyCount"))$("sceneReadyCount").textContent=`${readyCount} / ${(players||[]).length} joueurs prêts`;
- if($("sceneReadyText"))$("sceneReadyText").textContent=readyCount===(players||[]).length&&(players||[]).length?"Tout le monde est prêt !":"En attente des autres joueurs…";
-}
+async function loadRoom(roomId){const {data,error}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at").eq("id",roomId).single();if(error)throw error;room=data;await refreshLobby()}
 async function refreshLobby(){
- if(!room||lobbyRefreshBusy)return;
- lobbyRefreshBusy=true;
- try{
- const priorStatus=lastObservedRoomStatus ?? room.status;
- const {data:rd,error:re}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",room.id).single();if(re)throw re;
- room=rd;
- const hasJustStarted=room.status==="started"&&priorStatus!=="started";
- lastObservedRoomStatus=room.status;
- if(hasJustStarted&&mode==="player"){
-  roleRevealDismissed=false;
-  lastRoleRevealKey=null;
- }
+ if(!room)return;
+ const {data:rd,error:re}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at").eq("id",room.id).single();if(re)throw re;room=rd;
  $("roomCodeDisplay").textContent=room.code;$("roomHeading").textContent=room.title||"Salle d'attente";$("modeLabel").textContent=room.status==="started"?"Partie en cours":"Salon d'attente";
  const {data:pd,error:pe}=await sb.from("players").select("id,name,user_id,created_at,is_ready,is_alive").eq("room_id",room.id).order("created_at");if(pe)throw pe;players=pd||[];
- const ownPlayer=players.find(p=>p.user_id===user?.id);
- if(mode==="player"&&room.status==="started"&&ownPlayer){
-  if(lastOwnAliveState===true&&ownPlayer.is_alive===false)showEliminationAnimation();
-  lastOwnAliveState=ownPlayer.is_alive!==false;
- }
  renderRoster();
  const organizer=room.owner_id===user.id;
- renderPlayerLobbyScene();
  const gameStarted=room.status==="started";
- // Une fois la partie lancée, retirer tous les éléments de salon pour laisser la table et les commandes de partie.
- $("playerLobbyScene").classList.toggle("hidden",gameStarted||organizer);
- $("lobbyInfoCard").classList.toggle("hidden",gameStarted||!organizer);
- $("lobbyRosterCard").classList.toggle("hidden",gameStarted||!organizer);
+ // Une fois la partie lancée, on retire l'écran de salon (code, liste et panneau d'attente)
+ // pour laisser la table et les commandes utiles occuper l'écran.
+ $("lobbyInfoCard").classList.toggle("hidden",gameStarted);
+ $("lobbyRosterCard").classList.toggle("hidden",gameStarted);
  $("organizerPanel").classList.toggle("hidden",!organizer||gameStarted);
  $("playerPanel").classList.toggle("hidden",organizer||gameStarted);
  $("gameControlPanel").classList.toggle("hidden",!organizer||!gameStarted);
  $("playerGamePanel").classList.toggle("hidden",!gameStarted);$("playerRolePanel").classList.toggle("hidden",organizer||!gameStarted);document.body.classList.toggle("organizer-view",organizer);document.body.classList.toggle("player-started-view",!organizer&&room.status==="started");
- if(organizer){renderAssignments();await renderOrganizerRoleSummary();$("launchBtn").disabled=room.status==="started";$("launchBtn").textContent=room.status==="started"?"Partie lancée":"Lancer la partie";$("assignments").querySelectorAll("select,button").forEach(x=>x.disabled=room.status==="started");}
- else {
-  await renderPlayerRole();
-  $("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l'organisateur lance la partie.";
-  if(room.status==="started"&&mode==="player"&&secretRoleData&&(hasJustStarted||!lastRoleRevealKey)){
-   roleRevealDismissed=false;
-   showRoleReveal(secretRoleData.role_name,secretRoleData.role_description);
-   const meForReveal=players.find(p=>p.user_id===user.id);
-   lastRoleRevealKey=(meForReveal?.id||"")+"|"+secretRoleData.role_name+"|"+secretRoleData.role_description;
-  }
-}
+ if(organizer){renderAssignments();$("launchBtn").disabled=room.status==="started";$("launchBtn").textContent=room.status==="started"?"Partie lancée":"Lancer la partie";$("assignments").querySelectorAll("select,button").forEach(x=>x.disabled=room.status==="started");}
+ else {await renderPlayerRole();$("waitText").textContent=room.status==="started"?"La partie est lancée. Voici la table, ton rôle et ton bloc-notes.":"Tu es dans le salon. Attends que l'organisateur lance la partie."}
  await refreshGameState(organizer);
- if(!organizer&&room.status==="started")applyPlayerGameOnlyView();
- }finally{lobbyRefreshBusy=false}
 }
-async function renderOrganizerRoleSummary(){
- if(!room||!user||room.owner_id!==user.id)return;
- const before=$("organizerRoleSummaryBefore"),after=$("organizerRoleSummaryAfter");
- try{
-  const {data,error}=await sb.from("assignments").select("player_id,role_name");
-  if(error)throw error;
-  const rows=(data||[]).map(a=>{const p=players.find(x=>x.id===a.player_id);return p?{name:p.name+(p.is_alive===false?" (éliminé)":""),role:a.role_name||"Aucun rôle attribué"}:null}).filter(Boolean);
-  const markup=rows.length?rows.map(r=>`<div class="entry"><span class="name">${escapeHtml(r.name)}</span><span class="pill">${escapeHtml(r.role)}</span></div>`).join(""):'<p class="hint">Aucun rôle attribué pour le moment.</p>';
-  if(before){before.innerHTML=markup;before.classList.toggle("hidden",room.status==="started");}
-  if(after){after.innerHTML=markup;}
- }catch(e){
-  const message="Impossible de charger le récapitulatif des rôles : "+friendly(e);
-  if(before){before.textContent=message;before.classList.remove("hidden");}
-  if(after){after.textContent=message;}
- }
-}
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function showEliminationAnimation(title="Tu es éliminé !",caption="Ton aventure continue… mais tu es désormais un esprit du village."){
- const overlay=$("eliminationOverlay");if(!overlay)return;
- const titleEl=$("eliminationTitle"),captionEl=overlay.querySelector(".elimination-caption");if(titleEl)titleEl.textContent=title;if(captionEl)captionEl.textContent=caption;
- overlay.classList.remove("hidden");
- if(navigator.vibrate)try{navigator.vibrate([100,60,160])}catch(e){}
- if(eliminationOverlayTimer)clearTimeout(eliminationOverlayTimer);
- eliminationOverlayTimer=setTimeout(()=>overlay.classList.add("hidden"),6500);
-}
-$("dismissElimination").onclick=()=>{$("eliminationOverlay").classList.add("hidden");if(eliminationOverlayTimer)clearTimeout(eliminationOverlayTimer)};
-let lastSuccessionNoticeRoom=null;
-let dismissedGameAnnouncementRoom=null;
-const dismissedVictoryKeyPrefix="botc_dismissed_victory_";
-async function refreshDemonNightUI(organizer,phase){
- const panel=$("demonNightAction");if(!panel)return;
- const me=players.find(p=>p.user_id===user?.id);
- if(organizer||!me||phase!=="night"||room.status!=="started"){panel.classList.add("hidden");return}
- const {data:assignment,error}=await sb.from("assignments").select("role_name").eq("player_id",me.id).maybeSingle();
- if(error||String(assignment?.role_name||"").trim().toLocaleLowerCase("fr")!=="diablotin"){panel.classList.add("hidden");return}
- panel.classList.remove("hidden");
- const select=$("demonTargetSelect"),btn=$("submitDemonTarget"),msgBox=$("demonActionMsg");
- const previous=select.value;select.innerHTML='<option value="">Choisir un joueur vivant</option>';
- players.filter(p=>p.is_alive!==false).forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.id===me.id?p.name+" (toi-même)":p.name;select.append(o)});
- if(players.some(p=>p.id===previous&&p.is_alive!==false))select.value=previous;
- try{
-  const {data:used,error:usedError}=await sb.rpc("has_demon_action_this_night",{p_room_id:room.id});
-  if(usedError)throw usedError;
-  btn.disabled=!!used;
-  select.disabled=!!used;
-  msgBox.classList.toggle("hidden",!used);
-  msgBox.textContent=used?"Ton choix pour cette nuit a déjà été enregistré. Tu pourras choisir à nouveau la prochaine nuit.":"";
- }catch(e){btn.disabled=true;msgBox.classList.remove("hidden");msgBox.textContent="Impossible de vérifier ton action : "+friendly(e)}
-}
-async function submitDemonNightTarget(){
- const target=$("demonTargetSelect").value;
- if(!target){msg("demonActionMsg","Choisis une personne vivante.","error");return}
- const btn=$("submitDemonTarget");if(btn.disabled)return;
- btn.disabled=true;
- try{
-  const {error}=await sb.rpc("submit_demon_action",{p_room_id:room.id,p_target_player_id:target});
-  if(error)throw error;
-  msg("demonActionMsg","Ton choix est transmis à l’organisateur. Tu ne peux plus choisir de cible cette nuit.","success");
-  await refreshLobby();
- }catch(e){msg("demonActionMsg",friendly(e),"error");btn.disabled=false}
-}
-async function refreshOrganizerDemonAction(){
- const box=$("organizerNightAction");if(!box||!room||!user||room.owner_id!==user.id||room.game_phase!=="night"){if(box)box.classList.add("hidden");return}
- try{
-  const {data,error}=await sb.rpc("get_pending_demon_action",{p_room_id:room.id});
-  if(error)throw error;
-  const action=data&&typeof data==="object"?data:null;
-  if(!action||!action.target_player_id){box.classList.add("hidden");return}
-  box.classList.remove("hidden");
-  box.innerHTML="";
-  const text=document.createElement("p");text.textContent=`Choix du Diablotin (nuit ${action.night_count}) : ${action.target_name}.`;
-  const btn=document.createElement("button");btn.type="button";btn.textContent="Résoudre l’action nocturne";btn.onclick=async()=>{
-   btn.disabled=true;
-   try{
-    const {data:result,error:resolveError}=await sb.rpc("resolve_demon_action",{p_room_id:room.id,p_night_count:action.night_count});
-    if(resolveError)throw resolveError;
-    await refreshLobby();
-    showEliminationAnimation("Un joueur est éliminé !",`${result||action.target_name} a été éliminé pendant la nuit.`);
-   }catch(e){msg("gameMsg","Impossible de résoudre l’action du Diablotin : "+friendly(e),"error");btn.disabled=false}
-  };
-  box.append(text,btn);
- }catch(e){box.classList.remove("hidden");box.textContent="Action nocturne indisponible : "+friendly(e)}
-}
-$("submitDemonTarget").addEventListener("click",submitDemonNightTarget);
-$("dismissGameAnnouncement").addEventListener("click",()=>{
- dismissedGameAnnouncementRoom=room?.id||null;
- if(room?.id&&room?.game_winner){
-  try{localStorage.setItem(dismissedVictoryKeyPrefix+room.id,String(room.game_winner));}catch(_){}
- }
- $("gameAnnouncementOverlay").classList.add("hidden");
-});
-$("dismissSuccession").addEventListener("click",()=>$("successionOverlay").classList.add("hidden"));
 async function refreshGameState(organizer){
  if(!room||room.status!=="started")return;
  const phase=room.game_phase||"day"; currentPhase=phase;
- await refreshDemonNightUI(organizer,phase);
- if(!organizer&&phase==="night"&&room.status==="started"){
-  try{
-   const {data:promoted,error:promotionError}=await sb.rpc("claim_demon_succession",{p_room_id:room.id});
-   if(!promotionError&&promoted===true&&lastSuccessionNoticeRoom!==room.id){
-    lastSuccessionNoticeRoom=room.id;
-    $("successionOverlay").classList.remove("hidden");
-    await renderPlayerRole();
-   }
-  }catch(e){console.warn("Notification de succession indisponible",e)}
- }
- await refreshOrganizerDemonAction();
  const phaseNames={night:"Nuit",day:"Jour",council:"Conseil",voting:"Vote"};
  const safeText=(id,value)=>{const el=$(id);if(el)el.textContent=value};
  safeText("phaseStatus","Phase : "+(phaseNames[phase]||"Jour"));
  safeText("playerPhasePill","Phase : "+(phaseNames[phase]||"Jour"));
- const dayNo=Math.max(1,Number(room.day_count)||0),nightNo=Math.max(1,Number(room.night_count)||0);
- safeText("phaseCounter",phase==="night"?"Nuit "+nightNo:"Jour "+dayNo);
- safeText("organizerPhaseCounter",phase==="night"?"Nuit "+nightNo:"Jour "+dayNo);
- const winner=String(room.game_winner||"").trim();
- if(winner){
-  const overlay=$("gameAnnouncementOverlay");
-  $("gameAnnouncementTitle").textContent=winner.toLocaleLowerCase("fr").includes("gentil")||winner.toLocaleLowerCase("fr").includes("citadin")?"Les Citadins ont gagné !":"Le camp démon a gagné !";
-  $("gameAnnouncementText").textContent="La partie est terminée.";
-  const victoryKey=dismissedVictoryKeyPrefix+room.id;
-  let wasDismissed=dismissedGameAnnouncementRoom===room.id;
-  try{wasDismissed=wasDismissed||localStorage.getItem(victoryKey)===winner;}catch(_){}
-  if(!wasDismissed)overlay.classList.remove("hidden");
-  else overlay.classList.add("hidden");
- }else{
-  dismissedGameAnnouncementRoom=null;
-  $("gameAnnouncementOverlay")?.classList.add("hidden");
- }
  // Certains anciens décors n'ont plus de texte central : ne jamais planter si l'élément manque.
  safeText("tableCenterPhase",(phaseNames[phase]||"Jour").toUpperCase());
  safeText("playerPhaseText",phase==="council"?"CONSEIL : rejoignez la table immédiatement.":phase==="night"?"La nuit est tombée. Consulte ta fiche secrète et prends tes notes.":phase==="voting"?"Un vote est ouvert. Exprime ton choix sur ton téléphone.":"Le jour est levé. La description et le bloc-notes sont masqués.");
@@ -626,11 +278,12 @@ async function refreshGameState(organizer){
  renderVillageTable();
  if(!organizer)applySecretVisibility(phase);
  const {data:nd,error:ne}=await sb.rpc("get_room_nominations",{p_room_id:room.id});
- if(ne){const orgNotice=$("organizerNominationNotice");if(organizer&&orgNotice){orgNotice.textContent="Impossible de charger les nominations depuis Supabase : "+friendly(ne);orgNotice.classList.remove("hidden");}throw ne;} nominations=nd||[];
+ if(ne)throw ne; nominations=nd||[];
  let voteCounts={}; let myVotes=new Set();
  const {data:vd,error:ve}=await sb.rpc("get_room_votes",{p_room_id:room.id});if(ve)throw ve;
  const me=players.find(p=>p.user_id===user.id);
  (vd||[]).forEach(v=>{if(organizer){voteCounts[v.nomination_id] ||= {yes:0,no:0};if(v.vote)voteCounts[v.nomination_id].yes++;else voteCounts[v.nomination_id].no++}else if(me&&v.player_id===me.id){myVotes.add(v.nomination_id)}});
+ renderNominationUI(organizer,voteCounts,myVotes,phase);
 }
 
 function applySecretVisibility(phase){
@@ -649,20 +302,21 @@ function renderVillageTable(){
  const host=$("villageSeats");if(!host)return;host.innerHTML="";
  if(!players.length)return;
  const organizer=!!(room&&user&&room.owner_id===user.id&&room.status==="started");
- const ordered=[...players].sort((a,b)=>new Date(a.created_at||0)-new Date(b.created_at||0));
+ // Ordre commun à tous : ordre d'arrivée dans le salon, qui sert d'ordre des places.
+ const ordered=[...players].sort((a,b)=>{
+   const ta=new Date(a.created_at||0).getTime(), tb=new Date(b.created_at||0).getTime();
+   return ta-tb || String(a.id).localeCompare(String(b.id));
+ });
  const n=ordered.length;
  ordered.forEach((p,i)=>{
    const angle=(-Math.PI/2)+(2*Math.PI*i/n);
-   // Les étiquettes sont posées sur le pourtour de la table et réparties selon le nombre réel de joueurs.
-   const rx=n>12?39:n>8?37:35, ry=n>12?36:n>8?34:32;
-   const x=50+rx*Math.cos(angle), y=50+ry*Math.sin(angle);
-   const seat=document.createElement("div");
+   const chairX=50+38*Math.cos(angle), chairY=50+34*Math.sin(angle);
+   const name=document.createElement("div");
    const alive=p.is_alive!==false;
-   seat.className="dynamic-seat"+(p.user_id===user?.id?" me":"")+(!alive?" dead":"");
-   seat.style.left=x+"%";seat.style.top=y+"%";
-   const chair=document.createElement("div");chair.className="dynamic-chair";chair.setAttribute("aria-hidden","true");
-   const name=document.createElement("div");name.className="seat-name-only"+(p.user_id===user?.id?" me":"")+(!alive?" dead":"")+(organizer&&alive?" eliminable":"");
-   name.textContent=p.name;name.style.position="static";
+   name.className="seat-name-only"+(p.user_id===user?.id?" me":"")+(!alive?" dead":"")+(organizer&&alive?" eliminable":"");
+   name.textContent=p.name;
+   name.style.left=chairX+"%";
+   name.style.top=chairY+"%";
    name.setAttribute("aria-label",p.name+(alive?"":" — éliminé"));
    if(organizer&&alive){
      name.setAttribute("role","button");name.setAttribute("tabindex","0");name.title="Cliquer pour éliminer "+p.name+" sans révéler son rôle";
@@ -670,7 +324,7 @@ function renderVillageTable(){
      name.addEventListener("click",eliminate);
      name.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();eliminate()}});
    } else if(!alive){name.title="Joueur éliminé — rôle secret"}
-   seat.append(chair,name);host.append(seat);
+   host.append(name);
  });
 }
 async function eliminatePlayer(player){
@@ -682,7 +336,6 @@ async function eliminatePlayer(player){
    const {error}=await sb.rpc("eliminate_player",{p_room_id:room.id,p_player_id:player.id});
    if(error)throw error;
    await refreshLobby();
-   showEliminationAnimation("Un joueur est éliminé !",player.name+" quitte les vivants. Son rôle reste secret.");
    msg("gameMsg",player.name+" a été éliminé. Son rôle n’a pas été révélé.","success");
  }catch(e){
    const raw=String(e?.message||e||"");
@@ -714,6 +367,38 @@ async function setGamePhase(phase){
   }finally{buttons.forEach(b=>b.disabled=false)}
 }
 
+function playerName(id){return players.find(p=>p.id===id)?.name||"Joueur"}
+function renderNominationUI(organizer,voteCounts={},myVotes=new Set(),phase="day"){
+ const select=$("nomineeSelect");const old=select.value;select.innerHTML='<option value="">Choisir un joueur</option>';
+ const me=players.find(p=>p.user_id===user.id);
+ players.filter(p=>p.is_alive!==false&&(!me||p.id!==me.id)).forEach(p=>{const o=document.createElement("option");o.value=p.id;o.textContent=p.name;select.append(o)});if(players.some(p=>p.id===old&&p.is_alive!==false))select.value=old;
+ const org=$("organizerNominations"),pl=$("playerNominations");org.innerHTML="";pl.innerHTML="";
+ const visible=[...nominations].sort((a,b)=>new Date(a.created_at||0)-new Date(b.created_at||0));
+ if(!visible.length){org.textContent="Aucune nomination en cours.";pl.textContent="Aucune nomination en cours.";return}
+ const activeVote=visible.some(n=>n.status==="voting");
+ visible.forEach((n,index)=>{
+  const row=document.createElement("div");row.className="nomination";
+  const title=document.createElement("strong");title.textContent=(index+1)+". "+playerName(n.nominator_player_id)+" nomine "+playerName(n.target_player_id);row.append(title);
+  const state=document.createElement("p");state.textContent=n.status==="voting"?"Vote ouvert — cette personne n’est pas éliminée.":n.status==="closed"?"Vote clôturé — aucune élimination automatique.":"En attente — le vote sera ouvert par l’organisateur dans l’ordre.";row.append(state);
+  if(organizer){
+   if(n.status==="pending"){
+    const b=document.createElement("button");b.textContent=activeVote?"Attendre la clôture du vote précédent":"Ouvrir le vote";b.disabled=activeVote;b.onclick=()=>setNominationStatus(n.id,"voting");row.append(b);
+   }
+   if(n.status==="voting"||n.status==="closed"){
+    const tally=voteCounts[n.id]||{yes:0,no:0};const count=document.createElement("span");count.className="vote-count";count.textContent=`Pour l’élimination : ${tally.yes} · Contre : ${tally.no}`;row.append(count);
+    if(n.status==="voting"){const b=document.createElement("button");b.className="secondary";b.textContent="Clôturer ce vote";b.onclick=()=>setNominationStatus(n.id,"closed");row.append(b)}
+    else {const hint=document.createElement("p");hint.className="hint";hint.textContent="Pour éliminer quelqu’un, clique séparément sur son nom autour de la table.";row.append(hint)}
+   }
+  }else if(n.status==="voting"){
+   if(myVotes.has(n.id)){const done=document.createElement("span");done.className="pill";done.textContent="Vote enregistré";row.append(done)}
+   else {const yes=document.createElement("button");yes.textContent="👍 Oui, contre la personne";yes.onclick=()=>castVote(n.id,true);
+   const no=document.createElement("button");no.className="secondary";no.textContent="👎 Non, je ne vote pas contre";no.onclick=()=>castVote(n.id,false);row.append(yes,no)}
+  }
+  (organizer?org:pl).append(row);
+ });
+}
+async function setNominationStatus(id,status){try{if(status==="voting"&&nominations.some(n=>n.id!==id&&n.status==="voting")){msg("gameMsg","Clôture d’abord le vote en cours avant d’ouvrir la nomination suivante.","error");return}const {error}=await sb.rpc("set_nomination_status",{p_room_id:room.id,p_nomination_id:id,p_status:status});if(error)throw error;await refreshLobby();msg("gameMsg",status==="voting"?"Vote ouvert pour cette nomination.":"Vote clôturé.","success")}catch(e){msg("gameMsg",friendly(e),"error")}}
+async function castVote(id,vote){try{const {error}=await sb.rpc("cast_vote",{p_room_id:room.id,p_nomination_id:id,p_vote:vote});if(error)throw error;msg("nominationMsg","Ton vote a été enregistré.","success");await refreshLobby()}catch(e){msg("nominationMsg",friendly(e),"error")}}
 async function callCouncil(){
  if(!room?.id){msg("gameMsg","Aucun salon actif.","error");return}
  await setGamePhase("council");
@@ -723,48 +408,29 @@ async function endCouncil(){
  await setGamePhase("day");
 }
 
-function renderPlayerLobbyScene(){
- const scene=$("playerLobbyScene");if(!scene)return;
- const organizer=!!(room&&user&&room.owner_id===user.id);
- const show=!!room&&room.status!=="started"&&!organizer;
- scene.classList.toggle("hidden",!show);
- if(!show)return;
- $("sceneRoomTitle").textContent=room.title||"Salle d’attente";
- $("sceneRoomCode").textContent=room.code||"———";
- $("scenePlayerCount").textContent=players.length;
- const ready=players.filter(p=>p.is_ready).length;
- $("sceneReadyCount").textContent=`${ready} / ${players.length} joueurs prêts`;
- $("sceneReadyText").textContent=ready===players.length&&players.length?"Tout le monde est prêt !":"En attente des autres joueurs…";
- updatePlayerLobbyCompact();
- const me=players.find(p=>p.user_id===user?.id);
- const readyBtn=$("sceneReadyBtn");
- readyBtn.classList.toggle("is-ready",!!me?.is_ready);
- readyBtn.textContent=me?.is_ready?"✓ Tu es prêt":"✦ Je suis prêt";
- const host=$("sceneChairs");
- if(host){
-  host.innerHTML="";
-  if(!players.length){host.innerHTML='<p class="scene-empty">En attente des joueurs…</p>';return}
- }
- const ordered=[...players].sort((a,b)=>new Date(a.created_at||0)-new Date(b.created_at||0));
- const n=ordered.length;
- ordered.forEach((p,i)=>{
-  const angle=(-Math.PI/2)+(2*Math.PI*i/n);
-  const radius=n>12?43:n>8?41:39;
-  const x=50+radius*Math.cos(angle), y=50+radius*Math.sin(angle);
-  const seat=document.createElement("div");
-  seat.className="scene-seat"+(p.user_id===user?.id?" me":"")+(p.is_ready?" ready":"")+(p.is_alive===false?" dead":"");
-  seat.style.left=x+"%";seat.style.top=y+"%";
-  const chair=document.createElement("div");chair.className="scene-chair";
-  const label=document.createElement("div");label.className="scene-seat-name";
-  const num=document.createElement("span");num.className="scene-seat-number";num.textContent=String(i+1);
-  label.append(num,document.createTextNode(p.name));
-  seat.append(chair,label);if(host)host.append(seat);
- });
-}
+async function nominate(){const target=$("nomineeSelect").value;if(!target){msg("nominationMsg","Choisis un joueur à nominer.","error");return}try{const {error}=await sb.rpc("create_nomination",{p_room_id:room.id,p_target_player_id:target});if(error)throw error;msg("nominationMsg","Nomination proposée à l’organisateur.","success");await refreshLobby()}catch(e){msg("nominationMsg",friendly(e),"error")}}
 function renderRoster(){
- const host=$("playerRoster");host.innerHTML="";
+ const host=$("playerRoster");if(!host)return;host.innerHTML="";
  if(!players.length){host.textContent="Aucun joueur pour l’instant.";return}
- players.forEach(p=>{const row=document.createElement("div");row.className="entry";const name=document.createElement("span");name.className="name";name.textContent=p.name;const state=document.createElement("span");state.className="pill";state.textContent=p.is_ready?"Prêt":"En attente";if(p.is_ready)state.classList.add("readyyes");row.append(name,state);host.append(row)});
+ const organizer=!!(room&&user&&room.owner_id===user.id);
+ const ordered=[...players].sort((a,b)=>{
+   const ta=new Date(a.created_at||0).getTime(), tb=new Date(b.created_at||0).getTime();
+   return ta-tb || String(a.id).localeCompare(String(b.id));
+ });
+ ordered.forEach((p,i)=>{
+   const row=document.createElement("div");row.className="entry";
+   const name=document.createElement("span");name.className="name";
+   name.textContent=(i+1)+". "+p.name;
+   const state=document.createElement("span");state.className="pill";
+   state.textContent=p.is_ready?"Prêt":"En attente";
+   if(p.is_ready)state.classList.add("readyyes");
+   row.append(name,state);host.append(row);
+ });
+ // Les joueurs voient la liste du lobby; les contrôles organisateur restent inchangés.
+ if(!organizer){
+   const card=$("lobbyRosterCard");
+   if(card && room && room.status!=="started")card.classList.remove("hidden");
+ }
 }
 const ROLE_DESCRIPTIONS={
  "Diablotin":"Démon — Le Diablotin est le chef des Démons. Chaque nuit, il choisit de tuer quelqu'un. Il est mis au courant de trois rôles qui ne sont pas présents dans la partie. Si le Diablotin meurt, les Citadins gagnent. Mais s'il décide de se viser lui-même la nuit, il meurt et un Sbire choisi aléatoirement (la Femme Écarlate est prioritaire) devient alors le nouveau Diablotin.",
@@ -802,36 +468,14 @@ async function renderPlayerRole(){
  const {data,error}=await sb.from("assignments").select("role_name,role_description").eq("player_id",me.id).maybeSingle();
  if(error){msg("lobbyMsg","Impossible de charger ta fiche : "+friendly(error),"error");return}
  if(data){
-  let playerFacingData={...data};
-  if((data.role_name||"").trim().toLocaleLowerCase("fr")==="ivrogne"){
-    // Le joueur voit un rôle Citadin absent de la composition réelle.
-    // La liste complète des attributions est lue pour éviter les doublons.
-    const {data:allAssignments,error:assignmentError}=await sb.from("assignments").select("player_id,role_name");
-    if(assignmentError){
-      msg("lobbyMsg","Impossible de vérifier les rôles présents pour attribuer le faux rôle de l’Ivrogne. Vérifie les droits de lecture des attributions dans Supabase.","error");
-      return;
-    }
-    const used=new Set((allAssignments||[]).filter(a=>a.player_id!==me.id).map(a=>(a.role_name||"").trim().toLocaleLowerCase("fr")));
-    const apparentRoles=Object.keys(ROLE_DESCRIPTIONS).filter(name=>
-      ROLE_DESCRIPTIONS[name].startsWith("Citadin —") &&
-      !used.has(name.toLocaleLowerCase("fr"))
-    );
-    if(!apparentRoles.length){
-      msg("lobbyMsg","Aucun rôle Citadin non utilisé n’est disponible pour l’Ivrogne. Il faut attribuer moins de rôles Citadins dans cette partie.","error");
-      return;
-    }
-    let hash=0;for(let i=0;i<me.id.length;i++)hash=(hash*31+me.id.charCodeAt(i))>>>0;
-    const apparentRole=apparentRoles[hash%apparentRoles.length];
-    playerFacingData={role_name:apparentRole,role_description:ROLE_DESCRIPTIONS[apparentRole]};
-  }
-  secretRoleData=playerFacingData; $("playerSecretRoleName").textContent=playerFacingData.role_name; $("playerSecretRoleDesc").textContent=playerFacingData.role_description||"Aucune description renseignée."; $("playerSecretCard").classList.remove("hidden"); loadPrivateNotes(); applySecretVisibility(currentPhase);
-  $("myRoleName").textContent=playerFacingData.role_name;$("myRoleDesc").textContent=playerFacingData.role_description;$("myRole").classList.remove("hidden");
-  const key=me.id+"|"+playerFacingData.role_name+"|"+playerFacingData.role_description;
+  secretRoleData=data; $("playerSecretRoleName").textContent=data.role_name; $("playerSecretRoleDesc").textContent=data.role_description||"Aucune description renseignée."; $("playerSecretCard").classList.remove("hidden"); loadPrivateNotes(); applySecretVisibility(currentPhase);
+  $("myRoleName").textContent=data.role_name;$("myRoleDesc").textContent=data.role_description;$("myRole").classList.remove("hidden");
+  const key=me.id+"|"+data.role_name+"|"+data.role_description;
   if(lastRoleRevealKey!==key){
     lastRoleRevealKey=key;roleRevealDismissed=false;
-    showRoleReveal(playerFacingData.role_name,playerFacingData.role_description);
+    showRoleReveal(data.role_name,data.role_description);
   }else if(!roleRevealDismissed){
-    if($("roleReveal").classList.contains("hidden"))showRoleReveal(playerFacingData.role_name,playerFacingData.role_description);
+    if($("roleReveal").classList.contains("hidden"))showRoleReveal(data.role_name,data.role_description);
   }else{
     $("roleReveal").classList.add("hidden");
     $("home").classList.add("hidden");$("lobby").classList.remove("hidden");
@@ -839,107 +483,23 @@ async function renderPlayerRole(){
   document.body.classList.add("player-started-view");
  } else {msg("lobbyMsg","L'organisateur n'a pas attribué de rôle à ton profil. Contacte-le.","error")}
 }
-$("backToLobbyBtn").onclick=()=>{
- roleRevealDismissed=true;
- $("roleReveal").classList.add("hidden");
- $("home").classList.add("hidden");
- $("lobby").classList.remove("hidden");
- if(room?.status==="started"&&mode==="player"){
-  applyPlayerGameOnlyView();
-  refreshGameState(false).catch(e=>console.warn("Actualisation de la partie :",e));
-  return;
- }
- const organizer=!!(room&&user&&room.owner_id===user.id);
- $("lobbyInfoCard").classList.toggle("hidden",!organizer);
- $("lobbyRosterCard").classList.toggle("hidden",!organizer);
- $("playerLobbyScene").classList.toggle("hidden",organizer);
- $("organizerPanel").classList.toggle("hidden",!organizer);
- $("playerPanel").classList.toggle("hidden",organizer);
- $("gameControlPanel").classList.add("hidden");
- $("playerGamePanel").classList.add("hidden");
- $("playerRolePanel").classList.add("hidden");
- document.body.classList.remove("player-started-view");
-};
+$("backToLobbyBtn").onclick=()=>{roleRevealDismissed=true;$("roleReveal").classList.add("hidden");view("lobby")};
 $("organizerBtn").onclick=()=>{$("organizerLogin").classList.toggle("hidden");clearMsg("homeMsg")};
 $("cancelCreate").onclick=()=>$("organizerLogin").classList.add("hidden");
-$("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;lastObservedRoomStatus=room.status;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
-$("joinBtn").onclick=async()=>{
- if(!ready())return;
- const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();
- if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}
- const button=$("joinBtn");button.disabled=true;clearMsg("homeMsg");
- try{
-  await ensureUser();
-  const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});
-  if(error)throw error;
-  const joined=Array.isArray(data)?data[0]:data;
-  if(!joined||!joined.id||!joined.status)throw new Error("La fonction join_room n’a pas renvoyé de salon valide. Vérifie la fonction Supabase join_room.");
-  room=joined;lastObservedRoomStatus=room.status;mode="player";
-  localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);
-  roleRevealDismissed=false;lastRoleRevealKey=null;
-  view("lobby");
-  await refreshLobby();
-  startPolling();
- }catch(e){
-  console.error("Échec de connexion au salon :",e);
-  view("home");
-  msg("homeMsg","Impossible de rejoindre le salon : "+friendly(e),"error");
- }finally{button.disabled=false}
-};
-async function toggleReadyStatus(buttonId,messageId){
- if(!room||!user)return;
- const me=players.find(p=>p.user_id===user.id);
- if(!me){msg(messageId,"Ton profil n’apparaît pas dans la liste des joueurs. Actualise la page ou rejoins de nouveau le salon.","error");return}
- const button=$(buttonId);if(button)button.disabled=true;
- clearMsg(messageId);
- try{
-  const {error}=await sb.rpc("set_player_ready",{p_room_id:room.id,p_ready:!me.is_ready});
-  if(error)throw error;
-  await refreshLobby();
-  msg(messageId,!me.is_ready?"✓ Tu es marqué prêt.":"Tu n’es plus marqué prêt.", "success");
- }catch(e){msg(messageId,"Impossible de modifier ton statut : "+friendly(e),"error")}
- finally{if(button)button.disabled=false}
-}
-$("readyBtn").onclick=()=>toggleReadyStatus("readyBtn","readyMsg");
-$("sceneReadyBtn").onclick=()=>toggleReadyStatus("sceneReadyBtn","sceneReadyMsg");
-$("saveRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord le joueur à qui attribuer ce rôle.","error");return}const name=$("roleName").value.trim(),desc=$("roleDesc").value.trim();if(!name||!desc){msg("assignMsg","Renseigne le nom du rôle et sa description.","error");return}try{const {error}=await sb.rpc("assign_role",{p_room_id:room.id,p_player_id:selectedPlayer,p_role_name:name,p_role_description:desc});if(error)throw error;msg("assignMsg","Rôle enregistré pour le joueur sélectionné.","success");renderAssignments();await renderOrganizerRoleSummary();}catch(e){msg("assignMsg",friendly(e),"error")}};
-$("clearRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord un joueur.","error");return}try{const {error}=await sb.rpc("remove_role",{p_room_id:room.id,p_player_id:selectedPlayer});if(error)throw error;$("roleName").value="";$("roleDesc").value="";$("roleCatalog").value="";msg("assignMsg","Rôle retiré.","success");renderAssignments();await renderOrganizerRoleSummary()}catch(e){msg("assignMsg",friendly(e),"error")}};
-$("launchBtn").onclick=async()=>{if(!room)return;if(!confirm("Lancer la partie ? Les joueurs pourront voir leur propre rôle."))return;try{const {error}=await sb.rpc("start_room",{p_room_id:room.id});if(error)throw error;lastObservedRoomStatus=null;await refreshLobby();msg("lobbyMsg","Partie lancée ! Chaque joueur reçoit le rôle qui lui a été attribué, avec sa description.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
+$("createBtn").onclick=async()=>{if(!ready())return;try{$("createBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("create_room",{p_title:$("roomTitle").value.trim()||"Ma partie"});if(error)throw error;room=data;mode="organizer";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling();}catch(e){msg("createMsg",friendly(e),"error")}finally{$("createBtn").disabled=false}};
+$("joinBtn").onclick=async()=>{if(!ready())return;const code=$("joinCode").value.trim().toUpperCase(),name=$("playerName").value.trim();if(!code||!name){msg("homeMsg","Entre le code du salon et ton nom.","error");return}try{$("joinBtn").disabled=true;await ensureUser();const {data,error}=await sb.rpc("join_room",{p_code:code,p_name:name});if(error)throw error;room=data;mode="player";localStorage.setItem("botc_room_id",room.id);localStorage.setItem("botc_mode",mode);roleRevealDismissed=false;lastRoleRevealKey=null;view("lobby");await refreshLobby();startPolling()}catch(e){msg("homeMsg",friendly(e),"error")}finally{$("joinBtn").disabled=false}};
+$("readyBtn").onclick=async()=>{if(!room)return;const me=players.find(p=>p.user_id===user.id);if(!me)return;try{const {error}=await sb.rpc("set_player_ready",{p_room_id:room.id,p_ready:!me.is_ready});if(error)throw error;await refreshLobby();msg("readyMsg",!me.is_ready?"Tu es marqué prêt.":"Tu n’es plus marqué prêt.", "success")}catch(e){msg("readyMsg","Impossible de modifier ton statut : "+friendly(e),"error")}};
+$("saveRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord le joueur à qui attribuer ce rôle.","error");return}const name=$("roleName").value.trim(),desc=$("roleDesc").value.trim();if(!name||!desc){msg("assignMsg","Renseigne le nom du rôle et sa description.","error");return}try{const {error}=await sb.rpc("assign_role",{p_room_id:room.id,p_player_id:selectedPlayer,p_role_name:name,p_role_description:desc});if(error)throw error;msg("assignMsg","Rôle enregistré pour le joueur sélectionné.","success");renderAssignments();}catch(e){msg("assignMsg",friendly(e),"error")}};
+$("clearRole").onclick=async()=>{if(!room||!selectedPlayer){msg("assignMsg","Sélectionne d'abord un joueur.","error");return}try{const {error}=await sb.rpc("remove_role",{p_room_id:room.id,p_player_id:selectedPlayer});if(error)throw error;$("roleName").value="";$("roleDesc").value="";$("roleCatalog").value="";msg("assignMsg","Rôle retiré.","success");renderAssignments()}catch(e){msg("assignMsg",friendly(e),"error")}};
+$("launchBtn").onclick=async()=>{if(!room)return;if(!confirm("Lancer la partie ? Les joueurs pourront voir leur propre rôle."))return;try{const {error}=await sb.rpc("start_room",{p_room_id:room.id});if(error)throw error;await refreshLobby();msg("lobbyMsg","Partie lancée ! Chaque joueur peut découvrir son rôle avec l’animation de révélation.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
 function clearSavedRoom(){try{localStorage.removeItem("botc_room_id");localStorage.removeItem("botc_mode")}catch(e){console.warn("Impossible d’effacer la session locale",e)}}
-function returnHome(message=""){clearInterval(refreshTimer);refreshTimer=null;room=null;players=[];selectedPlayer=null;mode=null;lastObservedRoomStatus=null;clearSavedRoom();document.body.classList.remove("player-started-view");view("home");$("organizerLogin").classList.add("hidden");["lobbyMsg","createMsg"].forEach(clearMsg);if(message)msg("homeMsg",message,"success")}
-function applyPlayerGameOnlyView(){
- if(!room||room.status!=="started"||mode!=="player")return;
- document.body.classList.add("player-started-view");
- $("home").classList.add("hidden");
- $("lobby").classList.remove("hidden");
- const allowed=new Set(["playerGamePanel","playerRolePanel"]);
- Array.from($("lobby").children).forEach(el=>{
-  if(allowed.has(el.id)){el.classList.remove("hidden");el.style.removeProperty("display");}
-  else {el.classList.add("hidden");el.style.setProperty("display","none","important");}
- });
- const brand=document.querySelector("main > header.brand");
- if(brand)brand.style.setProperty("display","none","important");
-}
+function returnHome(message=""){clearInterval(refreshTimer);refreshTimer=null;room=null;players=[];selectedPlayer=null;mode=null;clearSavedRoom();document.body.classList.remove("player-started-view");view("home");$("organizerLogin").classList.add("hidden");["lobbyMsg","createMsg"].forEach(clearMsg);if(message)msg("homeMsg",message,"success")}
 async function closeCurrentRoom(){if(!room||!confirm("Fermer définitivement ce salon ? Tous les joueurs seront renvoyés à l’accueil."))return;try{const {error}=await sb.rpc("close_room",{p_room_id:room.id});if(error)throw error;returnHome("Salon fermé. Tu peux maintenant créer ou rejoindre une nouvelle partie.")}catch(e){msg("gameMsg",friendly(e),"error");msg("lobbyMsg",friendly(e),"error")}}
 $("endBtn").onclick=closeCurrentRoom;
 $("endGameRoomBtn").onclick=closeCurrentRoom;
 $("copyCode").onclick=async()=>{try{await navigator.clipboard.writeText(room.code);msg("lobbyMsg","Code copié : "+room.code,"success")}catch{msg("lobbyMsg","Code du salon : "+room.code)}};
 $("refresh").onclick=async()=>{try{await refreshLobby();msg("lobbyMsg","Salon actualisé.","success")}catch(e){msg("lobbyMsg",friendly(e),"error")}};
-async function leaveRoomAsPlayer(){
- if(!room||!user){returnHome("Tu as quitté le salon.");return}
- const currentRoomId=room.id;
- let warning="";
- try{
-  const {error}=await sb.from("players").delete().eq("room_id",currentRoomId).eq("user_id",user.id);
-  if(error)throw error;
- }catch(e){
-  console.warn("Suppression du joueur impossible :",e);
-  warning=" Tu as quitté l’interface, mais Supabase n’a pas pu retirer ton profil du salon : "+friendly(e);
- }
- returnHome("Tu as quitté le salon. Tu peux rejoindre une autre partie avec son code."+warning);
-}
-$("leaveBtn").onclick=leaveRoomAsPlayer;
-$("sceneLeaveBtn").onclick=leaveRoomAsPlayer;
+$("leaveBtn").onclick=()=>returnHome("Tu as quitté cet écran. Tu peux rejoindre une partie avec son code.");
 $("callCouncilBtn").onclick=callCouncil;
 $("endCouncilBtn").onclick=endCouncil;
 $("nightBtn").onclick=()=>setGamePhase("night");
@@ -947,7 +507,7 @@ $("dayBtn").onclick=()=>setGamePhase("day");
 $("showRoleDescBtn").onclick=()=>{if(currentPhase==="night")$("playerSecretRoleDesc").classList.remove("hidden")};
 $("hideRoleDescBtn").onclick=()=>$("playerSecretRoleDesc").classList.add("hidden");
 $("privateNotes").addEventListener("input",()=>{clearTimeout(notesSaveTimer);notesSaveTimer=setTimeout(savePrivateNotes,250)});
-function startPolling(){clearInterval(refreshTimer);refreshTimer=setInterval(async()=>{try{if(room)await refreshLobby()}catch(e){console.warn(e);if(mode==="player"&&room?.status!=="started")msg("sceneReadyMsg","Synchronisation impossible : "+friendly(e),"error");else if(mode==="player")msg("lobbyMsg","Actualisation impossible : "+friendly(e),"error")}},2000)}
+function startPolling(){clearInterval(refreshTimer);refreshTimer=setInterval(async()=>{try{if(room)await refreshLobby()}catch(e){console.warn(e)}},4000)}
 async function restorePreviousRoom(){
  if(!ready())return;
  let saved=null,savedMode=null;
@@ -955,7 +515,7 @@ async function restorePreviousRoom(){
  if(!saved)return;
  try{
   await ensureUser();
-  const {data,error}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at,day_count,night_count,game_winner").eq("id",saved).maybeSingle();
+  const {data,error}=await sb.from("rooms").select("id,code,title,status,owner_id,game_phase,council_updated_at").eq("id",saved).maybeSingle();
   if(error||!data){clearSavedRoom();view("home");return}
   const status=String(data.status||"").toLowerCase();
   if(["closed","finished","ended","deleted","cancelled","canceled"].includes(status)) {clearSavedRoom();view("home");return}
@@ -1018,24 +578,7 @@ body.player-started-view #playerRolePanel>p{margin-bottom:10px;}
 body.player-started-view #playerRolePanel .actions{display:none!important;}
 body.player-started-view #playerSecretCard{display:block!important;}
 body.player-started-view #playerSecretRoleDesc.hidden{display:none!important;}
-/* Une fois la partie lancée, masquer complètement les cartes du lobby.
-   La table, la fiche du rôle et les commandes de partie restent visibles. */
-body.player-started-view #lobbyInfoCard,
-body.player-started-view #lobbyRosterCard,
-body.player-started-view #playerLobbyScene{
- display:none!important;
-}
-/* Règle supprimée : ne pas masquer les informations du salon de l’organisateur. */
 
 </style>
 
-
-<style>
-/* Restauration du code et des informations du salon avant lancement. */
-body.organizer-view:not(.player-started-view) #lobbyInfoCard,
-body.organizer-view:not(.player-started-view) #lobbyRosterCard{
- display:block!important;
-}
-body.organizer-view:not(.player-started-view) #playerLobbyScene{display:none!important;}
-</style>
 </body></html>
